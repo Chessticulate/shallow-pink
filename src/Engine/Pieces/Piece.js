@@ -148,33 +148,143 @@
 // 	public abstract boolean canMove();
 // }
 
-import {Board, setPiece} from '../Board.js';
-import { Color } from '../Color';
+// import {Board, setPiece} from '../Board.js';
+// import { Color } from '../Color';
 
+// import game object to access methods using the game.board
+import game from "../Game";
 
 const Piece = class {
-  constructor(color, id, address) {
-    this.color = color;
-    this.id = id;
-    this.address = address;
-    // in the piece constructor, initialize the piece on the board
-    setPiece(address, this);
-  }
 
-  getColor() {
-    return this.color;
-  }
-  
-  setAddress(address) {
-    this.address = address;
-  }
-  
-  getAddress() {
-    return this.address
-  }
+    constructor(color, id, address) {
+        this.color = color;
+        this.id = id;
+        this.address = address;
+        this.isFirstMove = true;
+
+        if (this.getColor() == Color.WHITE) {
+            white.add(this);
+        } else {
+            black.add(this);
+        }
+
+        // in the piece constructor, initialize the piece on the board
+        game.setPiece(address, this);
+    }
+
+    getId() {
+      return this.id
+    }
+
+    getColor() {
+      return this.color;
+    }
+
+    setAddress(address) {
+      this.address = address;
+    }
+
+    getAddress() {
+      return this.address
+    }
+
+    sameColor(otherPiece) {
+        if (otherPiece == null) {
+          return false;
+        }
+        return (this.color == otherPiece.getColor());
+    }
+
+    setPiece(address, piece) {
+        if (piece != null) {
+          piece.setAddress(address)
+        }
+        board[y][x] = piece;
+    }
+
+    move(address, piece) {
+      if (this.possibleMove(x, y) != true) {
+        return -1;
+      }
+    }
+
+// 		Color color = this.getColor();
+// 		int originX = this.getX();
+// 		int originY = this.getY();
+
+// 		if (this.getColor() == Color.WHITE) {
+// 			Board.black.remove(other);
+// 		} else {
+// 			Board.white.remove(other);
+// 		}
+
+// 		Board.setPiece(originX, originY, null);
+// 		Board.setPiece(x, y, this);
+
+// 		boolean isFirstMoveOG = this.isFirstMove;
+// 		this.isFirstMove = false;
+
+// 		if (Board.checkForCheck(color) == true) {
+// 			if (other != null) {
+// 				if (this.getColor() == Color.WHITE) {
+// 					Board.black.add(other);
+// 				} else {
+// 					Board.white.add(other);
+// 				}
+// 			}
+// 			Board.setPiece(originX, originY, this);
+// 			Board.setPiece(x, y, other);
+// 			this.isFirstMove = isFirstMoveOG;
+
+// 			return -1;
+// 		}
+
+// 		if (this instanceof Pawn) {
+// 			char file = this.getID().charAt(4);
+// 			if (this.getColor() == Color.WHITE && y == 0) {
+// 				Board.setPiece(x, y, null);
+// 				Board.white.remove(this);
+// 				Queen yasQueen = new Queen(Color.WHITE, "queen" + file, x, y);
+// 				System.out.println("Pawn promoted!");
+// 			} else if (this.getColor() == Color.BLACK && y == 7) {
+// 				Board.setPiece(x, y, null);
+// 				Board.black.remove(this);
+// 				Queen yasQueen = new Queen(Color.BLACK, "queen" + file, x, y);
+// 				System.out.println("Pawn promoted!");
+// 			}
+// 		}
+
+// 		return 0;
+// 	}
+
+// 	public boolean testMove(int x, int y) {
+// 		int originX = this.getX();
+// 		int originY = this.getY();
+// 		Piece other;
+// 		boolean isFirst = this.isFirstMove;
+
+// 		if (x >= 0 && y >= 0 && x <= 7 && y <= 7) {
+// 			other = Board.getPiece(x, y);
+// 			if (this.move(x, y, other) == 0) {
+// 				// captured piece set to original position
+// 				Board.setPiece(x, y, other);
+// 				// selected piece set to original position
+// 				Board.setPiece(originX, originY, this);
+// 				isFirstMove = isFirst;
+// 				if (other != null) {
+// 					if (other.getColor() == Color.WHITE) {
+// 						Board.white.add(other);
+// 					} else
+// 						Board.black.add(other);
+// 				}
+// 				return true;
+// 			}
+// 		}
+// 		return false;
+// 	}
 
 
 }
 
 
-export default Piece;
+export default { Piece };

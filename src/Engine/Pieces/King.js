@@ -147,8 +147,12 @@
 
 // }
 
+import Piece from "./Piece.js";
+
 const King = class extends Piece {
   constructor(color, id, address){
     super(color, id, address);
   }
 }
+
+export default { King }

@@ -106,8 +106,12 @@
 // }
 // Footer
 
+import Piece from "./Piece.js";
+
 const Pawn = class extends Piece {
   constructor(color, id, address){
     super(color, id, address);
   }
 }
+
+export default { Pawn }

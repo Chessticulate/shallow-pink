@@ -1,4 +1,5 @@
-export default Color = {
-  White: "white",
-  Black: "black"
+const Color = {
+  WHITE: "white",
+  BLACK: "black"
 }
+export default Color;
