@@ -1,3 +1,39 @@
+
+// Board class
+/**--------------------------------------------- */
+const Board = class {
+  constructor() {
+    this.board = [
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','','']  
+    ]
+    console.log('board', this.board)
+  }
+  // for printing empty tiles on the board
+  nullToString() {
+    
+  }
+}
+
+// Color 
+/**------------------------------------------------- */
+const Color = {
+  White: "white",
+  Black: "black"
+}
+
+// Team lists
+/**------------------------------------------------- */
+let white = [];
+let black = [];
+
+
 // Piece Class
 /**------------------------------------------ */
 const Piece = class {
@@ -9,13 +45,13 @@ const Piece = class {
     this.isFirstMove = true;
 
     if (this.getColor() == Color.WHITE) {
-        white.add(this);
+        white.push(this);
     } else {
-        black.add(this);
+        black.push(this);
     }
 
     // in the piece constructor, initialize the piece on the board
-    game.setPiece(address, this);
+    this.setPiece(address, this);
   }
 
   getId() {
@@ -45,7 +81,14 @@ const Piece = class {
     if (piece != null) {
       piece.setAddress(address)
     }
-    board[y][x] = piece;
+    console.log("address", address)
+    console.log("Piece", piece)
+    let x = address[0];
+    let y = address[1];
+    console.log('x', x)
+    console.log('y', y)
+    // need to find javascript equivalent to board[x][y]= piece
+    game.board.insert(y, insert(x, piece)) = piece;
   }
 
   move(address, piece) {
@@ -62,6 +105,12 @@ const King = class extends Piece {
   constructor(color, id, address){
     super(color, id, address);
   }
+  toString = function kingToString() {
+    if (this.getColor() == Color.White) {
+      return "♔";
+    }
+    else return "♚";
+  }
 }
 
 // Queen
@@ -69,6 +118,12 @@ const King = class extends Piece {
 const Queen = class extends Piece {
   constructor(color, id, address) {
     super(color, id, address);
+  }
+  toString = function queenToString() {
+    if (this.getColor() == Color.White) {
+      return "♕";
+		}
+		else return "♛";
   }
 }
 
@@ -78,6 +133,12 @@ const Rook = class extends Piece {
   constructor(color, id, address){
     super(color, id, address);
   }
+  toString = function rookToString() {
+    if (this.getColor() == Color.White) {
+      return "♖";
+		}
+		else return "♜";
+  }
 }
 
 // Bishop
@@ -85,6 +146,12 @@ const Rook = class extends Piece {
 const Bishop = class extends Piece {
   constructor(color, id, address){
     super(color, id, address);
+  }
+  toString = function bishopToString() {
+    if (this.getColor() == Color.White) {
+      return "♗";
+    }
+    else return "♝";
   }
 }
 
@@ -94,6 +161,12 @@ const Knight = class extends Piece {
   constructor(color, id, address){
     super(color, id, address);
   }
+  toString = function knightToString() {
+    if (this.getColor() == Color.White) {
+      return "♘";
+    }
+    else return "♞";
+  }
 }
 
 // Pawn
@@ -101,6 +174,12 @@ const Knight = class extends Piece {
 const Pawn = class extends Piece {
   constructor(color, id, address){
     super(color, id, address);
+  }
+  toString = function pawnToString() {
+    if (this.getColor() == Color.White) {
+      return "♙";
+    }
+    else return "♟";
   }
 }
 
@@ -127,16 +206,7 @@ class Game {
       this.black = [];
     
       // board
-      this.Board = [
-        [,,,,,,,],
-        [,,,,,,,],
-        [,,,,,,,],
-        [,,,,,,,],
-        [,,,,,,,],
-        [,,,,,,,],
-        [,,,,,,,],
-        [,,,,,,,]  
-      ]
+      this.Board = new Board();
         
     }
     
@@ -150,7 +220,7 @@ class Game {
         // console.log("| ");
         for (let j = 0; j < 8; j++) {
 
-          if (this.board[i][j] == null) {
+          if (this.board[i][j] === undefined) {
             console.log("  | ");
           } else {
             console.log(this.board[i][j], " | ");
@@ -170,51 +240,55 @@ class Game {
   startGame() {
     
     // black
-    new Rook.constructor(Color.Black, "rookQ", [0, 0]);
-    new Knight.constructor(Color.Black, "knightQ", [1, 0]);
-    new Bishop.constructor(Color.Black, "bishopQ", [2, 0]);
-    new Queen.constructor(Color.Black, "queen", [3, 0]);
-    new King.constructor(Color.Black, "king", [4, 0]);
-    new Bishop.constructor(Color.Black, "bishopK", [5, 0]);
-    new Knight.constructor(Color.Black, "knightK", [6, 0]);
-    new Rook.constructor(Color.Black, "rookK", [7, 0]);
+    new Rook(Color.Black, "rookQ", [0, 0]);
+    new Knight(Color.Black, "knightQ", [1, 0]);
+    new Bishop(Color.Black, "bishopQ", [2, 0]);
+    new Queen(Color.Black, "queen", [3, 0]);
+    new King(Color.Black, "king", [4, 0]);
+    new Bishop(Color.Black, "bishopK", [5, 0]);
+    new Knight(Color.Black, "knightK", [6, 0]);
+    new Rook(Color.Black, "rookK", [7, 0]);
 
-    new Pawn.constructor(Color.Black, "pawnA", [0, 1]);
-    new Pawn.constructor(Color.Black, "pawnB", [1, 1]);
-    new Pawn.constructor(Color.Black, "pawnC", [2, 1]);
-    new Pawn.constructor(Color.Black, "pawnD", [3, 1]);
-    new Pawn.constructor(Color.Black, "pawnE", [4, 1]);
-    new Pawn.constructor(Color.Black, "pawnF", [5, 1]);
-    new Pawn.constructor(Color.Black, "pawnG", [6, 1]);
-    new Pawn.constructor(Color.Black, "pawnH", [7, 1]);
+    new Pawn(Color.Black, "pawnA", [0, 1]);
+    new Pawn(Color.Black, "pawnB", [1, 1]);
+    new Pawn(Color.Black, "pawnC", [2, 1]);
+    new Pawn(Color.Black, "pawnD", [3, 1]);
+    new Pawn(Color.Black, "pawnE", [4, 1]);
+    new Pawn(Color.Black, "pawnF", [5, 1]);
+    new Pawn(Color.Black, "pawnG", [6, 1]);
+    new Pawn(Color.Black, "pawnH", [7, 1]);
 
     // white
-    new Rook.constructor(Color.White, "rookQ", [0, 7]);
-    new Knight.constructor(Color.White, "knightQ", [1, 7]);
-    new Bishop.constructor(Color.White, "bishopQ", [2, 7]);
-    new Queen.constructor(Color.White, "queen", [3, 7]);
-    new King.constructor(Color.White, "king", [4, 7]);
-    new Bishop.constructor(Color.White, "bishopK", [5, 7]);
-    new Knight.constructor(Color.White, "knightK", [6, 7]);
-    new Rook.constructor(Color.White, "rookK", [7, 7]);
+    new Rook(Color.White, "rookQ", [0, 7]);
+    new Knight(Color.White, "knightQ", [1, 7]);
+    new Bishop(Color.White, "bishopQ", [2, 7]);
+    new Queen(Color.White, "queen", [3, 7]);
+    new King(Color.White, "king", [4, 7]);
+    new Bishop(Color.White, "bishopK", [5, 7]);
+    new Knight(Color.White, "knightK", [6, 7]);
+    new Rook(Color.White, "rookK", [7, 7]);
 
-    new Pawn.constructor(Color.White, "pawnA", [0, 6]);
-    new Pawn.constructor(Color.White, "pawnB", [1, 6]);
-    new Pawn.constructor(Color.White, "pawnC", [2, 6]);
-    new Pawn.constructor(Color.White, "pawnD", [3, 6]);
-    new Pawn.constructor(Color.White, "pawnE", [4, 6]);
-    new Pawn.constructor(Color.White, "pawnF", [5, 6]);
-    new Pawn.constructor(Color.White, "pawnG", [6, 6]);
-    new Pawn.constructor(Color.White, "pawnH", [7, 6]);
+    new Pawn(Color.White, "pawnA", [0, 6]);
+    new Pawn(Color.White, "pawnB", [1, 6]);
+    new Pawn(Color.White, "pawnC", [2, 6]);
+    new Pawn(Color.White, "pawnD", [3, 6]);
+    new Pawn(Color.White, "pawnE", [4, 6]);
+    new Pawn(Color.White, "pawnF", [5, 6]);
+    new Pawn(Color.White, "pawnG", [6, 6]);
+    new Pawn(Color.White, "pawnH", [7, 6]);
   }
 
   // set piece to provided coordinates
-  setPiece(address, piece) {
-    if (piece != null) {
-      piece.setAddress(address)
-    }
-    this.board[y][x] = piece;
-  }
+  // setPiece(piece) {
+  //   if (piece != null) {
+  //     piece.setAddress()
+  //   }
+  //   console.log("address", piece.address)
+  //   console.log("Piece", piece)
+  //   let x = address[0];
+  //   let y = address[1];
+  //   this.board[y][x] = piece;
+  // }
 
 
   // game loop
