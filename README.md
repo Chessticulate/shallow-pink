@@ -1,2 +1,2 @@
 # WebChess
-My personal Chess website.
+Chess engine implemented in Node.js
