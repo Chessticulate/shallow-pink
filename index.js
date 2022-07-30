@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('./lib/engine');
+module.exports = require('./lib/chess');
