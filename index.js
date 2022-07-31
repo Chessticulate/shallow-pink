@@ -13,8 +13,8 @@ const main = (moves) => {
     const game = new Chess();
 
     while (game.gameOver() === false && game.turn < moves.length) {
-        const [piece, address] = moves[game.turn];
-        game.doMove(piece, address);
+        const [pieceId, address] = moves[game.turn];
+        game.doMove(pieceId, address);
     }
 
     console.log('GAME OVER');
