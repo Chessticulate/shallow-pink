@@ -9,12 +9,16 @@ module.exports = Chess;
 const usage = () => console.log(`${process.argv[0]} ${process.argv[1]} <path/to/input/file>`);
 
 
-const main = (moves) => {
+async function main(moves) {
     const game = new Chess();
 
-    while (game.gameOver() === false && game.turn < moves.length) {
+    while (game.gameOver === false && game.turn < moves.length) {
+        console.log('' + game);
+
         const [pieceId, address] = moves[game.turn];
-        game.doMove(pieceId, address);
+        console.log(game.move(pieceId, address));
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
     }
 
     console.log('GAME OVER');
