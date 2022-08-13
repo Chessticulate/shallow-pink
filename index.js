@@ -1,41 +1,45 @@
 'use strict';
 
 const Chess = require('./lib/chess');
-const fs = require('fs');
-
 module.exports = Chess;
 
+const readline = require('readline');
 
-const usage = () => console.log(`${process.argv[0]} ${process.argv[1]} <path/to/input/file>`);
 
+function playChess() {
+    const chess = new Chess();
 
-async function main(moves) {
-    const game = new Chess();
+    return new Promise(function(resolve, reject) {
+        let rl = readline.createInterface(process.stdin, process.stdout)
+        rl.setPrompt(`${chess}\n> `)
+        rl.prompt();
 
-    while (game.gameOver === false && game.turn < moves.length) {
-        console.log('' + game);
+        rl.on('line', function(line) {
+            if (line === 'exit' || line === 'quit') {
+                rl.close();
+                return;
+            }
 
-        const [pieceId, address] = moves[game.turn];
-        console.log(game.move(pieceId, address));
+            let pieceMove = line.split(' ');
+            if (pieceMove.length === 2) {
+                let [piece, move] = pieceMove;
+                console.log(chess.move(piece, move));
+                if (chess.gameOver) process.exit();
+            } else {
+                console.log(`invalid move`);
+            }
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
-    }
-
-    console.log('GAME OVER');
+            rl.prompt();
+        });
+    })
 }
 
+
+async function main() {
+    await playChess();
+}
+
+
 if (require.main === module) {
-    if (process.argv.length !== 3) {
-        usage();
-        process.exit(1);
-    }
-
-    const moves = fs.readFileSync(process.argv[2])
-        .toString()
-        .replaceAll('\r\n', '\n')  // in case you have windows' line endings
-        .split('\n')
-        .filter(line => line.includes(' '))
-        .map(line => line.split(' '));
-
-    main(moves);
+    main();
 }
