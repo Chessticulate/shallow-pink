@@ -4,8 +4,8 @@ const Board = require('../lib/board');
 
 
 test('pawn constructor', () => {
-    let pawn = new Pawn("pawnA", Color.WHITE, 0, 6);
-    expect(pawn.id).toBe("pawnA");
+    let pawn = new Pawn('pawnA', Color.WHITE, 0, 6);
+    expect(pawn.id).toBe('pawnA');
     expect(pawn.color).toBe(Color.WHITE);
     expect(pawn.x).toBe(0);
     expect(pawn.y).toBe(6);
@@ -52,4 +52,20 @@ test('pawn can only move diagonally onto space occupied by opponent', () => {
 
     expect(pawnBWhite.evaluate(board, 0, 5)).toBe(true);
     expect(pawnBWhite.evaluate(board, 2, 5)).toBe(true);   
+});
+
+
+test('white pawns can only move up, black pawns can only move down', () => {
+    let board = new Board();
+    board.board = Array(8).fill().map(() => Array(8).fill(null));
+    let pawnDBlack = new Pawn('pawnD', Color.BLACK, 3, 1);
+    let pawnDWhite = new Pawn('pawnD', Color.WHITE, 3, 6);
+    board.board[1][3] = pawnDBlack;
+    board.board[6][3] = pawnDWhite;
+
+    expect(pawnDBlack.evaluate(board, 3, 0)).toBe(false);
+    expect(pawnDBlack.evaluate(board, 3, 2)).toBe(true);
+
+    expect(pawnDWhite.evaluate(board, 3, 7)).toBe(false);
+    expect(pawnDWhite.evaluate(board, 3, 5)).toBe(true);
 });
