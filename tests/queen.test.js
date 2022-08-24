@@ -17,7 +17,7 @@ test('queen can only move through empty spaces', () => {
   board.board = Array(8).fill().map(() => Array(8).fill(null));
 
   let queen = new Queen('queen', Color.WHITE, 4, 4);
-  board.board[4][4] = queen;
+  board.set(4, 4, queen);
 
   // testing queens movement
   expect(queen.evaluate(board, 0, 0)).toBe(true);
@@ -26,8 +26,8 @@ test('queen can only move through empty spaces', () => {
   let pawnAWhite = new Pawn('pawnA', Color.WHITE, 7, 1);
   let pawnABlack = new Pawn('pawnA', Color.BLACK, 6, 0);
   
-  board.board[6][6] = pawnAWhite;
-  board.board[1][1] = pawnABlack;
+  board.set(6, 6, pawnAWhite);
+  board.set(1, 1, pawnABlack);
 
   // making sure queen cannot move through pieces
   expect(queen.evaluate(board, 7, 7)).toBe(false);
@@ -39,15 +39,15 @@ test('queen can only capture pieces of opposite color', () => {
   board.board = Array(8).fill().map(() => Array(8).fill(null));
 
   let queen = new Queen('queen', Color.WHITE, 4, 4);
-  board.board[4][4] = queen;
+  board.set(4, 4, queen);
 
   let blackPawn = new Pawn('pawnA', Color.BLACK, 3, 3);
-  board.board[3][3] = blackPawn;
+  board.set(3, 3, blackPawn);
 
   expect(queen.evaluate(board, 3, 3)).toBe(true);
 
   let whitePawn = new Pawn('pawnA', Color.WHITE, 3, 4);
-  board.board[4][3] = whitePawn;
+  board.set(3, 4, whitePawn);
 
   expect(queen.evaluate(board, 3, 4)).toBe(false);
 }) 

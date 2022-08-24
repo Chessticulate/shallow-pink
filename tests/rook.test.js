@@ -28,12 +28,12 @@ test('rook cannot move through other pieces', () => {
     let board = new Board();
     board.board = Array(8).fill().map(() => Array(8).fill(null));
     let rookKBlack = new Rook('rookK', Color.BLACK, 3, 0);
-    board.board[0][3] = rookKBlack;
+    board.set(3, 0, rookKBlack);
 
     expect(rookKBlack.evaluate(board, 3, 7)).toBe(true);
 
     let rookQWhite = new Rook('rookQ', Color.WHITE, 3, 4);
-    board.board[4][3] = rookQWhite;
+    board.set(3, 4, rookQWhite);
 
     expect(rookKBlack.evaluate(board, 3, 7)).toBe(false);
 });

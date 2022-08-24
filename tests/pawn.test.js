@@ -31,8 +31,8 @@ test('pawn can only move forward onto empty spaces', () => {
     expect(pawnAWhite.evaluate(board, 0, 5)).toBe(true);
     expect(pawnAWhite.evaluate(board, 0, 4)).toBe(true);
 
-    board.board[5][0] = pawnABlack;
-    board.board[4][0] = pawnABlack;
+    board.set(0, 5, pawnABlack);
+    board.set(0, 4, pawnABlack);
 
     expect(pawnAWhite.evaluate(board, 0, 5)).toBe(false);
     expect(pawnAWhite.evaluate(board, 0, 4)).toBe(false);
@@ -47,8 +47,8 @@ test('pawn can only move diagonally onto space occupied by opponent', () => {
     expect(pawnBWhite.evaluate(board, 0, 5)).toBe(false);
     expect(pawnBWhite.evaluate(board, 2, 5)).toBe(false);
 
-    board.board[5][0] = pawnBBlack;
-    board.board[5][2] = pawnBBlack;
+    board.set(0, 5, pawnBBlack);
+    board.set(2, 5, pawnBBlack);
 
     expect(pawnBWhite.evaluate(board, 0, 5)).toBe(true);
     expect(pawnBWhite.evaluate(board, 2, 5)).toBe(true);   
@@ -60,8 +60,8 @@ test('white pawns can only move up, black pawns can only move down', () => {
     board.board = Array(8).fill().map(() => Array(8).fill(null));
     let pawnDBlack = new Pawn('pawnD', Color.BLACK, 3, 1);
     let pawnDWhite = new Pawn('pawnD', Color.WHITE, 3, 6);
-    board.board[1][3] = pawnDBlack;
-    board.board[6][3] = pawnDWhite;
+    board.set(3, 1, pawnDBlack);
+    board.set(3, 6, pawnDWhite);
 
     expect(pawnDBlack.evaluate(board, 3, 0)).toBe(false);
     expect(pawnDBlack.evaluate(board, 3, 2)).toBe(true);

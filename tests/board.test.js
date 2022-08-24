@@ -123,8 +123,8 @@ test('checkForCheck works', () => {
     expect(board.checkForCheck(Color.BLACK)).toBe(false);
 
     board.board = Array(8).fill().map(() => Array(8).fill(null));
-    board.board[0][4] = blackQueen;
-    board.board[7][4] = whiteKing;
+    board.set(4, 0, blackQueen);
+    board.set(4, 7, whiteKing);
 
     expect(board.getByAddress(4, 0)).toBe(blackQueen);
     expect(board.getByAddress(4, 7)).toBe(whiteKing);
@@ -142,9 +142,9 @@ test('checkForMate works', () => {
     expect(board.checkForMate(Color.BLACK)).toBe(false);
 
     board.board = Array(8).fill().map(() => Array(8).fill(null));
-    board.board[0][5] = new Rook('rookQ', Color.WHITE, 5, 0);
-    board.board[2][6] = new King('king', Color.WHITE, 6, 2);
-    board.board[0][7] = new King('king', Color.BLACK, 7, 0);
+    board.set(5, 0, new Rook('rookQ', Color.WHITE, 5, 0));
+    board.set(6, 2, new King('king', Color.WHITE, 6, 2));
+    board.set(7, 0, new King('king', Color.BLACK, 7, 0));
 
     expect(board.checkForMate(Color.WHITE)).toBe(false);
     expect(board.checkForMate(Color.BLACK)).toBe(true);
@@ -158,9 +158,9 @@ test('checkForStalemate works', () => {
     expect(board.checkForStalemate(Color.BLACK)).toBe(false);
 
     board.board = Array(8).fill().map(() => Array(8).fill(null));
-    board.board[0][7] = new King('king', Color.BLACK, 7, 0);
-    board.board[1][5] = new King('king', Color.WHITE, 5, 1);
-    board.board[3][5] = new Queen('queen', Color.WHITE, 5, 3);
+    board.set(7, 0, new King('king', Color.BLACK, 7, 0));
+    board.set(5, 1, new King('king', Color.WHITE, 5, 1));
+    board.set(5, 3, new Queen('queen', Color.WHITE, 5, 3));
 
     expect(board.checkForStalemate(Color.WHITE)).toBe(false);
     expect(board.checkForStalemate(Color.BLACK)).toBe(true);
