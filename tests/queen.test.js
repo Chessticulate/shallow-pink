@@ -26,8 +26,8 @@ test('queen can only move through empty spaces', () => {
   let pawnAWhite = new Pawn('pawnA', Color.WHITE, 7, 1);
   let pawnABlack = new Pawn('pawnA', Color.BLACK, 6, 0);
   
-  board.board[7][1] = pawnAWhite;
-  board.board[6][0] = pawnABlack;
+  board.board[6][6] = pawnAWhite;
+  board.board[1][1] = pawnABlack;
 
   // making sure queen cannot move through pieces
   expect(queen.evaluate(board, 7, 7)).toBe(false);
@@ -47,8 +47,7 @@ test('queen can only capture pieces of opposite color', () => {
   expect(queen.evaluate(board, 3, 3)).toBe(true);
 
   let whitePawn = new Pawn('pawnA', Color.WHITE, 3, 4);
-  board.board[3][4] = whitePawn;
+  board.board[4][3] = whitePawn;
 
-  // this should return false but it is returning true
   expect(queen.evaluate(board, 3, 4)).toBe(false);
 }) 
