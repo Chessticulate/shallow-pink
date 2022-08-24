@@ -9,7 +9,7 @@ test('queen constructor', () => {
   expect(queen.id).toBe('queen');
   expect(queen.color).toBe(Color.WHITE);
   expect(queen.x).toBe(4);
-  expect(queen.y).toBe(6);
+  expect(queen.y).toBe(7);
 });
 
 test('queen can only move through empty spaces', () => {
@@ -20,8 +20,8 @@ test('queen can only move through empty spaces', () => {
   board.board[4][4] = queen;
 
   // testing queens movement
-  expect(queen.evaluate(board, 0, 0).toBe(true));
-  expect(queen.evaluate(board, 7, 0).toBe(true));
+  expect(queen.evaluate(board, 0, 0)).toBe(true);
+  expect(queen.evaluate(board, 4, 7)).toBe(true);
 
   let pawnAWhite = new Pawn('pawnA', Color.WHITE, 7, 1);
   let pawnABlack = new Pawn('pawnA', Color.BLACK, 6, 0);
@@ -30,11 +30,8 @@ test('queen can only move through empty spaces', () => {
   board.board[6][0] = pawnABlack;
 
   // making sure queen cannot move through pieces
-  expect(queen.evaluate(board, 7, 7).toBe(false));
-  expect(queen.evaluate(board, 0, 0).toBe(false));
-  
-  // testing capturing a piece from opposing team
-  expect(queen.evaluate(board, 6, 0).toBe(true));
+  expect(queen.evaluate(board, 7, 7)).toBe(false);
+  expect(queen.evaluate(board, 0, 0)).toBe(false);
 });
 
 test('queen can only capture pieces of opposite color', () => {
@@ -44,8 +41,14 @@ test('queen can only capture pieces of opposite color', () => {
   let queen = new Queen('queen', Color.WHITE, 4, 4);
   board.board[4][4] = queen;
 
-  let pawn = new Pawn('pawnA', Color.BLACK, 3, 3);
-  board.board[3][3] = pawn;
+  let blackPawn = new Pawn('pawnA', Color.BLACK, 3, 3);
+  board.board[3][3] = blackPawn;
 
-  expect(queen.evaluate(board, 3, 3).toBe(true))
+  expect(queen.evaluate(board, 3, 3)).toBe(true);
+
+  let whitePawn = new Pawn('pawnA', Color.WHITE, 3, 4);
+  board.board[3][4] = whitePawn;
+
+  // this should return false but it is returning true
+  expect(queen.evaluate(board, 3, 4)).toBe(false);
 }) 
