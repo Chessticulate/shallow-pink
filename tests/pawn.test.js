@@ -2,6 +2,8 @@ const Color = require('../lib/color');
 const Pawn = require('../lib/pieces/pawn');
 const Board = require('../lib/board');
 
+// TODO
+// Promotion, En Passant
 
 test('pawn constructor', () => {
     let pawn = new Pawn('pawnA', Color.WHITE, 0, 6);
