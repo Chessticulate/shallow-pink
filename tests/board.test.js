@@ -10,7 +10,7 @@ test('board constructor', () => {
 
     expect(board.board.length).toBe(8);
     expect(board.board[0].length).toBe(8);
-    expect(board.moveHistory.length).toBe(0);
+    expect(board.prevMove).toBe(null);
 });
 
 
@@ -86,7 +86,7 @@ test('board moves pieces, and move history behaves correctly', () => {
     expect(board.getByAddress(2, 3)).toBe(null);
     expect(pawnCBlack.x).toBe(2);
     expect(pawnCBlack.y).toBe(1);
-    expect(board.moveHistory.length).toBe(0);
+    expect(board.prevMove).toBe(null);
 
     // do move
     board.move(pawnCBlack, 2, 3);
@@ -96,11 +96,11 @@ test('board moves pieces, and move history behaves correctly', () => {
     expect(board.getByAddress(2, 3)).toBe(pawnCBlack);
     expect(pawnCBlack.x).toBe(2);
     expect(pawnCBlack.y).toBe(3);
-    expect(board.moveHistory.length).toBe(1);
-    expect(board.moveHistory[0].pieceMoved).toBe(pawnCBlack);
-    expect(board.moveHistory[0].originX).toBe(2);
-    expect(board.moveHistory[0].originY).toBe(1);
-    expect(board.moveHistory[0].pieceTaken).toBe(null);
+    expect(board.prevMove !== null).toBe(true);
+    expect(board.prevMove.pieceMoved).toBe(pawnCBlack);
+    expect(board.prevMove.originX).toBe(2);
+    expect(board.prevMove.originY).toBe(1);
+    expect(board.prevMove.pieceTaken).toBe(null);
 
     // undo
     board.undo();
@@ -110,7 +110,6 @@ test('board moves pieces, and move history behaves correctly', () => {
     expect(board.getByAddress(2, 3)).toBe(null);
     expect(pawnCBlack.x).toBe(2);
     expect(pawnCBlack.y).toBe(1);
-    expect(board.moveHistory.length).toBe(0);
 });
 
 
