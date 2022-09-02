@@ -36,3 +36,20 @@ test('knights movement', () => {
     expect(knightKWhite.evaluate(board, 4, 6)).toBe(false);
 });
 
+
+test('knight moves can be ambiguous', () => {
+    let board = new Board();
+    board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    let knightBWhite = new Knight('knightB', Color.WHITE, 1, 6);
+    board.set(1, 6, knightBWhite);
+    let knightFWhite = new Knight('knightF', Color.WHITE, 5, 6);
+    board.set(5, 6, knightFWhite);
+
+    expect(knightBWhite.evaluate(board, 3, 5)).toBe(true);
+    expect(knightFWhite.evaluate(board, 3, 5)).toBe(true);
+
+    expect(knightBWhite.ambiguous(board, 3, 5)).toBe(true);
+    expect(knightFWhite.ambiguous(board, 3, 5)).toBe(true);
+});
+

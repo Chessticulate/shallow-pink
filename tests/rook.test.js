@@ -37,3 +37,24 @@ test('rook cannot move through other pieces', () => {
 
     expect(rookKBlack.evaluate(board, 3, 7)).toBe(false);
 });
+
+
+test('rook moves can be ambiguous', () => {
+    let board = new Board();
+    board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    let rookAWhite = new Rook('rookA', Color.WHITE, 0, 7);
+    board.set(0, 7, rookAWhite);
+    let rookHWhite = new Rook('rookH', Color.WHITE, 7, 7);
+    board.set(7, 7, rookHWhite);
+
+    expect(rookAWhite.evaluate(board, 0, 0)).toBe(true);
+    expect(rookHWhite.evaluate(board, 7, 0)).toBe(true);
+
+    expect(rookAWhite.evaluate(board, 4, 7)).toBe(true);
+    expect(rookHWhite.evaluate(board, 4, 7)).toBe(true);
+
+    expect(rookAWhite.ambiguous(board, 4, 7)).toBe(true);
+    expect(rookHWhite.ambiguous(board, 4, 7)).toBe(true);
+});
+

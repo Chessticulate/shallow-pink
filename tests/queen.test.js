@@ -51,3 +51,28 @@ test('queen can only capture pieces of opposite color', () => {
 
     expect(queen.evaluate(board, 3, 4)).toBe(false);
 });
+
+
+test('promoted queen moves can be ambiguous', () => {
+    let board = new Board();
+    board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    let queenA = new Queen('queenA', Color.WHITE, 0, 7);
+    board.set(0, 7, queenA);
+    let queenG = new Queen('queenG', Color.WHITE, 6, 7);
+    board.set(6, 7, queenG);
+
+    expect(queenA.evaluate(board, 3, 4)).toBe(true);
+    expect(queenG.evaluate(board, 3, 4)).toBe(true);
+    expect(queenA.ambiguous(board, 3, 4)).toBe(true);
+    expect(queenG.ambiguous(board, 3, 4)).toBe(true);
+
+    expect(queenA.evaluate(board, 3, 7)).toBe(true);
+    expect(queenG.evaluate(board, 3, 7)).toBe(true);
+    expect(queenA.ambiguous(board, 3, 7)).toBe(true);
+    expect(queenG.ambiguous(board, 3, 7)).toBe(true);
+
+    expect(queenA.evaluate(board, 0, 6)).toBe(true);
+    expect(queenG.evaluate(board, 0, 6)).toBe(false);
+    expect(queenA.ambiguous(board, 0, 6)).toBe(false);
+});

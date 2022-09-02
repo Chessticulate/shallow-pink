@@ -46,3 +46,12 @@ test('test king can only capture pieces of opposite color', () => {
 
     expect(king.evaluate(board, 1, 1)).toBe(true);
 });
+
+
+test('king moves are never ambiguous', () => {
+    // kinda dumb to test for this since there
+    // can be only one king on the board
+    let king = new King('king', Color.BLACK, 3, 3);
+    expect(king.ambiguous(null, 4, 4)).toBe(false);
+});
+

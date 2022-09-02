@@ -71,3 +71,22 @@ test('white pawns can only move up, black pawns can only move down', () => {
     expect(pawnDWhite.evaluate(board, 3, 7)).toBe(false);
     expect(pawnDWhite.evaluate(board, 3, 5)).toBe(true);
 });
+
+
+test('pawn moves are never ambiguous', () => {
+    let board = new Board();
+    board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    let pawnCWhite = new Pawn('pawnC', Color.WHITE, 3, 4);
+    board.set(3, 4, pawnCWhite);
+    let pawnEWhite = new Pawn('pawnE', Color.WHITE, 5, 4);
+    board.set(5, 4, pawnEWhite);
+    let pawnDBlack = new Pawn('pawnD', Color.BLACK, 4, 3);
+    board.set(4, 3, pawnDBlack);
+
+    expect(pawnCWhite.evaluate(board, 4, 3)).toBe(true);
+    expect(pawnEWhite.evaluate(board, 4, 3)).toBe(true);
+
+    expect(pawnCWhite.ambiguous(board, 4, 3)).toBe(false);
+    expect(pawnEWhite.ambiguous(board, 4, 3)).toBe(false);
+});
