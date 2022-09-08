@@ -29,6 +29,7 @@ function playChess() {
                 console.log(`invalid move`);
             }
 
+            rl.setPrompt(`${chess}\n> `)
             rl.prompt();
         });
     })
