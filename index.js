@@ -10,8 +10,8 @@ function playChess() {
     const chess = new Chess();
 
     return new Promise(function(resolve, reject) {
-        let rl = readline.createInterface(process.stdin, process.stdout)
-        rl.setPrompt(`${chess}\n> `)
+        let rl = readline.createInterface(process.stdin, process.stdout);
+        rl.setPrompt(`${chess}\n> `);
         rl.prompt();
 
         rl.on('line', function(line) {
