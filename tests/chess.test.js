@@ -7,12 +7,13 @@ const King = require('../lib/pieces/king');
 const Color = require('../lib/color');
 const Queen = require('../lib/pieces/queen');
 const Rook = require('../lib/pieces/rook');
+const Pawn = require('../lib/pieces/pawn');
 
 
 test('chess constructor', () => {
     let chess = new Chess();
 
-    expect(chess.turn).toBe(0);
+    expect(chess.turn).toBe(1);
     expect(chess.board instanceof Board).toBe(true);
     expect(chess.gameOver).toBe(false);
     expect(chess.stalemate).toBe(false);
@@ -112,7 +113,7 @@ test('test game over by stalemate', () => {
     expect(chess.move('rookQ', 'H6')).toBe(Status.MOVEOK);
     expect(chess.move('pawnH', 'H4')).toBe(Status.MOVEOK);
     expect(chess.move('pawnF', 'F6')).toBe(Status.MOVEOK);
-    expect(chess.move('queen', 'D7')).toBe(Status.MOVEOK);
+    expect(chess.move('queen', 'D7')).toBe(Status.CHECK);
     expect(chess.move('king', 'F7')).toBe(Status.MOVEOK);
     expect(chess.move('queen', 'B7')).toBe(Status.MOVEOK);
     expect(chess.move('queen', 'D3')).toBe(Status.MOVEOK);
@@ -131,6 +132,28 @@ test('test game over by stalemate', () => {
     expect(chess.move('king', 'G5',)).toBe(Status.GAMEOVER);
     expect(chess.turn).toBe(turn);
 });
+
+test('promotion', () => {
+    let chess = new Chess();
+
+    chess.board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    let blackKing = new King('king', Color.BLACK, 7, 0);
+    chess.board.set(7, 0, blackKing);
+
+    let whiteKing = new King('king', Color.WHITE, 7, 7);
+    chess.board.set(7, 7, whiteKing);
+
+    let pawn = new Pawn('pawn', Color.WHITE, 0, 1);
+    chess.board.set(0, 1, pawn);
+
+    expect(chess.move('pawn', 'a8')).toBe(Status.PROMOTION);
+    expect(chess.turn).toBe(1);
+    expect(chess.promotion).toBe(pawn);
+    expect(chess.move('king')).toBe(Status.INVALIDPROMOTION);
+    expect(chess.move('queEn')).toBe(Status.CHECK);
+    expect(chess.turn).toBe(2);
+})
 
 
 test('test chess tostring', () => {

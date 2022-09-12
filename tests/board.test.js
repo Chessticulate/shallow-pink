@@ -1,6 +1,7 @@
 const Board = require('../lib/board');
 const Color = require('../lib/color');
 const King = require('../lib/pieces/king');
+const Pawn = require('../lib/pieces/pawn');
 const Queen = require('../lib/pieces/queen');
 const Rook = require('../lib/pieces/rook');
 
@@ -176,6 +177,19 @@ test('pathClear works', () => {
     expect(board.pathClear(6, 6, 1, 1)).toBe(true);
     expect(board.pathClear(6, 6, 0, 0)).toBe(false);
     expect(board.pathClear(7, 7, 1, 1)).toBe(false);
+});
+
+test('promote works', () => {
+    let board = new Board();
+    let pawn = new Pawn('pawnA', Color.WHITE, 0, 0);
+
+    expect(board.promote(pawn, 'quan')).toBe(false);
+    expect(board.promote(pawn, 'king')).toBe(false);
+
+    expect(board.promote(pawn, 'queen')).toBe(true);
+    expect(board.promote(pawn, 'rook')).toBe(true);
+    expect(board.promote(pawn, 'bishop')).toBe(true);
+    expect(board.promote(pawn, 'knight')).toBe(true);
 });
 
 
