@@ -1,5 +1,6 @@
 const Color = require('../lib/color');
 const Pawn = require('../lib/pieces/pawn');
+const King = require('../lib/pieces/king');
 const Board = require('../lib/board');
 
 // TODO
@@ -12,6 +13,7 @@ test('pawn constructor', () => {
     expect(pawn.x).toBe(0);
     expect(pawn.y).toBe(6);
     expect(pawn.firstMove).toBe(true);
+    expect(pawn.enPassantable).toBe(false);
 });
 
 
@@ -71,3 +73,25 @@ test('white pawns can only move up, black pawns can only move down', () => {
     expect(pawnDWhite.evaluate(board, 3, 7)).toBe(false);
     expect(pawnDWhite.evaluate(board, 3, 5)).toBe(true);
 });
+
+
+test('en passant', () => {
+    let board = new Board();
+    board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    let kingWhite = new King('king', Color.WHITE, 4, 7);
+    board.set(4, 7, kingWhite);
+    let pawnDWhite = new Pawn('pawnD', Color.WHITE, 3, 4);
+    board.set(3, 4, pawnDWhite);
+
+    let kingBlack = new King('king', Color.BLACK, 4, 0);
+    board.set(4, 0, kingBlack);
+    let pawnEBlack = new Pawn('pawnE', Color.BLACK, 4, 4);
+    board.set(4, 4, pawnEBlack);
+
+    pawnDWhite.enPassantable = false;
+    expect(pawnEBlack.evaluate(board, 3, 5)).toBe(false);
+    pawnDWhite.enPassantable = true;
+    expect(pawnEBlack.evaluate(board, 3, 5)).toBe(true);
+});
+

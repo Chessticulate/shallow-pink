@@ -112,6 +112,8 @@ test('board moves pieces, and move history behaves correctly', () => {
     expect(pawnCBlack.x).toBe(2);
     expect(pawnCBlack.y).toBe(1);
     expect(board.moveHistory.length).toBe(0);
+
+  
 });
 
 
@@ -192,8 +194,40 @@ test('promote works', () => {
     expect(board.promote(pawn, 'knight')).toBe(true);
 });
 
+test('en passant move history', () => {
+    let board = new Board();
+    board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    let kingWhite = new King('king', Color.WHITE, 4, 7);
+    board.set(4, 7, kingWhite);
+    let pawnDWhite = new Pawn('pawnD', Color.WHITE, 3, 4);
+    pawnDWhite.enPassantable = true;
+    board.set(3, 4, pawnDWhite);
+
+    let kingBlack = new King('king', Color.BLACK, 4, 0);
+    board.set(4, 0, kingBlack);
+    let pawnEBlack = new Pawn('pawnE', Color.BLACK, 4, 4);
+    board.set(4, 4, pawnEBlack);
+
+    expect(board.moveHistory.length).toBe(0);
+    board.move(pawnEBlack, 3, 5);
+    expect(board.moveHistory.length).toBe(1);
+    expect(board.moveHistory[0].pieceMoved).toBe(pawnEBlack);
+    expect(board.moveHistory[0].pieceTaken).toBe(pawnDWhite);
+    expect(board.moveHistory[0].originX).toBe(4);
+    expect(board.moveHistory[0].originY).toBe(4);
+    expect(board.moveHistory[0].destinationX).toBe(3);
+    expect(board.moveHistory[0].destinationY).toBe(5);
+
+    board.undo();
+    expect(board.moveHistory.length).toBe(0);
+    expect(board.getByAddress(3, 5)).toBe(null);
+    expect(board.getByAddress(4, 4)).toBe(pawnEBlack);
+    expect(board.getByAddress(3, 4)).toBe(pawnDWhite);
+});
 
 test('toString works', () => {
     let board = new Board();
     board.toString();
 });
+

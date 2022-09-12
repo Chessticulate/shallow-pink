@@ -155,6 +155,31 @@ test('promotion', () => {
     expect(chess.turn).toBe(2);
 })
 
+test('en passant', () => {
+    let chess = new Chess();
+    chess.board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    let kingWhite = new King('king', Color.WHITE, 4, 7);
+    chess.board.set(4, 7, kingWhite);
+    let pawnDWhite = new Pawn('pawnD', Color.WHITE, 3, 6);
+    chess.board.set(3, 6, pawnDWhite);
+
+    let kingBlack = new King('king', Color.BLACK, 4, 0);
+    chess.board.set(4, 0, kingBlack);
+    let pawnEBlack = new Pawn('pawnE', Color.BLACK, 4, 4);
+    chess.board.set(4, 4, pawnEBlack);
+
+    expect(chess.enPassantable).toBe(null);
+    expect(pawnDWhite.enPassantable).toBe(false);
+
+    expect(chess.move('pawnD', 'd4')).toBe(Status.MOVEOK);
+    expect(pawnDWhite.enPassantable).toBe(true);
+    expect(chess.enPassantable).toBe(pawnDWhite);
+
+    expect(chess.move('pawnE', 'd3')).toBe(Status.MOVEOK);
+    expect(chess.board.getByAddress(3, 4)).toBe(null);
+    expect(chess.enPassantable).toBe(null);
+});
 
 test('test chess tostring', () => {
     let chess = new Chess();
