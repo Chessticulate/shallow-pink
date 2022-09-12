@@ -21,15 +21,10 @@ function playChess() {
             }
 
             let pieceMove = line.split(' ');
-            if (pieceMove.length === 2) {
-                let [piece, move] = pieceMove;
-                console.log(chess.move(piece, move));
-                if (chess.gameOver) process.exit();
-            } else {
-                console.log(`invalid move`);
-            }
+            console.log(chess.move(pieceMove[0], pieceMove[1]));
+            if (chess.gameOver) process.exit();
 
-            rl.setPrompt(`${chess}\n> `)
+            rl.setPrompt(`${chess}\n> `);
             rl.prompt();
         });
     })
