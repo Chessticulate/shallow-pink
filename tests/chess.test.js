@@ -184,8 +184,6 @@ test('castling', () => {
 
     chess.turn = 2;
 
-    console.log(chess.board.toString());
-
     expect(chess.move('queen', 'E8')).toBe(Status.MOVEOK);
 
     // expect(chess.check).toBe(true);
