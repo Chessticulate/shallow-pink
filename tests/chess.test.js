@@ -155,6 +155,43 @@ test('promotion', () => {
     expect(chess.turn).toBe(2);
 })
 
+test('castling', () => {
+    let chess = new Chess();
+    chess.board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    let whiteKing = new King('king', Color.WHITE, 4, 7);
+    chess.board.set(4, 7, whiteKing);
+
+    let whiteRook = new Rook('rookK', Color.WHITE, 7, 7);
+    chess.board.set(7, 7, whiteRook);
+
+    // black king is required for chess.move to function properly
+    let blackKing = new King('king', Color.BLACK, 0, 1);
+    chess.board.set(0, 1, blackKing);
+
+    expect(chess.move('castle', 'k')).toBe(Status.MOVEOK);
+
+    // reset board, test that castling out of check does not work
+    chess = new Chess();
+    chess.board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    chess.board.set(4, 7, whiteKing);
+    chess.board.set(7, 7, whiteRook);
+    chess.board.set(0, 1, blackKing);
+
+    let blackQueen = new Queen('queen', Color.BLACK, 0, 0);
+    chess.board.set(0, 0, blackQueen);
+
+    chess.turn = 2;
+
+    expect(chess.move('queen', 'E8')).toBe(Status.MOVEOK);
+
+    // expect(chess.check).toBe(true);
+
+    expect(chess.move('castle', 'k')).toBe(Status.INVALIDMOVE);
+
+});
+
 test('en passant', () => {
     let chess = new Chess();
     chess.board.board = Array(8).fill().map(() => Array(8).fill(null));

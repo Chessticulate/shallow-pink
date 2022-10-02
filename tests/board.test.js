@@ -1,5 +1,6 @@
 const Board = require('../lib/board');
 const Color = require('../lib/color');
+const Bishop = require('../lib/pieces/bishop');
 const King = require('../lib/pieces/king');
 const Pawn = require('../lib/pieces/pawn');
 const Queen = require('../lib/pieces/queen');
@@ -192,6 +193,91 @@ test('promote works', () => {
     expect(board.promote(pawn, 'rook')).toBe(true);
     expect(board.promote(pawn, 'bishop')).toBe(true);
     expect(board.promote(pawn, 'knight')).toBe(true);
+});
+
+// try to test castling basic features, 
+// skip castling out of check, castling function is not called in chess.move if check = true, 
+// so castling does not check if king is currently in check, and only checks if the spaces for castling are
+test('castling works', () => {
+    let board = new Board();
+    board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    let whiteKing = new King('king', Color.WHITE, 4, 7);
+    board.set(4, 7, whiteKing);
+
+    // if rook has been captured, castling not possible (done)
+    let whiteRook = null;
+    expect(board.castle('k', Color.WHITE)).toBe(false);
+
+    /**------------------------------------------------------ */
+    // first move needs to be true in order to castle (done)
+
+    whiteRook = new Rook('rookK', Color.WHITE, 7, 7);
+    board.set(7, 7, whiteRook);
+
+    expect(whiteKing.firstMove).toBe(true);
+    expect(whiteRook.firstMove).toBe(true);
+    expect(board.castle('k', Color.WHITE)).toBe(true);
+
+    // first move of rook and king is false after castle (done)
+    expect(whiteKing.firstMove).toBe(false);
+    expect(whiteRook.firstMove).toBe(false);
+
+    /**------------------------------------------------------ */
+    // cannot castle if pieces are in between (done)
+
+    board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    whiteKing = new King('king', Color.WHITE, 4, 7);
+    board.set(4, 7, whiteKing);
+
+    whiteRook = new Rook('rookK', Color.WHITE, 7, 7);
+    board.set(7, 7, whiteRook);
+
+    let whiteBishop = new Bishop('bishopK', Color.WHITE, 5, 7);
+    board.set(5, 7, whiteBishop);
+
+    expect(board.castle('k', Color.WHITE)).toBe(false);
+
+    // move bishop 
+    board.set(6, 6, whiteBishop);
+    board.set(5, 7, null);
+
+    expect(board.castle('k', Color.WHITE)).toBe(true);
+
+    /**------------------------------------------------------ */
+    // castling queen side
+
+    let blackKing = new King('king', Color.BLACK, 4, 0);
+    board.set(4, 0, blackKing);
+
+    let blackRook = new Rook('rookQ', Color.BLACK, 0, 0);
+    board.set(0, 0, blackRook);
+
+    expect(board.castle('q', Color.BLACK)).toBe(true);
+
+    /**------------------------------------------------------ */
+    // cannot castle across the line of check
+
+    board.board = Array(8).fill().map(() => Array(8).fill(null));
+
+    blackKing = new King('king', Color.BLACK, 4, 0);
+    board.set(4, 0, blackKing);
+
+    blackRook = new Rook('rookQ', Color.BLACK, 0, 0);
+    board.set(0, 0, blackRook);
+
+    let whiteQueen = new Queen('queen', Color.WHITE, 3, 7);
+    board.set(3, 7, whiteQueen);
+
+    expect(board.castle('q', Color.BLACK)).toBe(false);
+
+    // move queen
+    board.set(0, 7, whiteQueen);
+    board.set(3, 7, null);
+    whiteQueen.x = 0;
+
+    expect(board.castle('q', Color.BLACK)).toBe(true);
 });
 
 test('en passant move history', () => {
