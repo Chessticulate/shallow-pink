@@ -1,0 +1,15 @@
+name: libchess-ci
+on:
+  push:
+    branches: [ ** ]
+
+jobs:
+    test:
+        - uses: actions/checkout@v3
+        with:
+            node-version: 16.x
+        - name: Install Dependencies
+          run: npm ci
+        - name: Run Tests
+          run: npm test
+
