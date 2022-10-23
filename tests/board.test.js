@@ -12,80 +12,103 @@ test('board constructor', () => {
 
     expect(board.board.length).toBe(8);
     expect(board.board[0].length).toBe(8);
-    expect(board.moveHistory.length).toBe(0);
+    expect(board.prevMove).toBe(null);
+
+    expect(board.blackKing instanceof King).toBe(true);
+    expect(board.blackKing.color).toBe(Color.BLACK);
+
+    expect(board.whiteKing instanceof King).toBe(true);
+    expect(board.whiteKing.color).toBe(Color.WHITE);
 });
 
 
 test('correct piece placement on board', () => {
     let board = new Board();
 
+    for (let y = 0; y < 2; y++) {
+        for (let x = 0; x < 8; x++) {
+            expect(board.get(x, y).color).toBe(Color.BLACK);
+            expect(board.get(x, 7 - y).color).toBe(Color.WHITE);
+        }
+    }
+
+    for (let y = 2; y < 6; y++) {
+        for (let x = 0; x < 8; x++) {
+            expect(board.get(x, y)).toBe(null);
+        }
+    }
+
+    let blackKing = board.get(4, 0);
+    expect(blackKing instanceof King).toBe(true);
+    expect(blackKing.color).toBe(Color.BLACK);
+
+    let whiteKing = board.get(4, 7);
+    expect(whiteKing instanceof King).toBe(true);
+    expect(whiteKing.color).toBe(Color.WHITE);
+
     // White
-    let pawnAWhite = board.getByAddress(0, 6);
+    let pawnAWhite = board.get(0, 6);
     expect(pawnAWhite === null).toBe(false);
-    expect(pawnAWhite.id).toBe('pawnA');
     expect(pawnAWhite.color).toBe(Color.WHITE);
     expect(pawnAWhite.x).toBe(0);
     expect(pawnAWhite.y).toBe(6);
 
-    let pawnHWhite = board.getByAddress(7, 6);
+    let pawnHWhite = board.get(7, 6);
     expect(pawnHWhite === null).toBe(false);
-    expect(pawnHWhite.id).toBe('pawnH');
     expect(pawnHWhite.color).toBe(Color.WHITE);
     expect(pawnHWhite.x).toBe(7);
     expect(pawnHWhite.y).toBe(6);
 
-    let rookQWhite = board.getByAddress(0, 7);
+    let rookQWhite = board.get(0, 7);
     expect(rookQWhite === null).toBe(false);
-    expect(rookQWhite.id).toBe('rookQ');
     expect(rookQWhite.color).toBe(Color.WHITE);
     expect(rookQWhite.x).toBe(0);
     expect(rookQWhite.y).toBe(7);
 
-    let bishopKWhite = board.getByAddress(5, 7);
+    let bishopKWhite = board.get(5, 7);
     expect(bishopKWhite === null).toBe(false);
-    expect(bishopKWhite.id).toBe('bishopK');
     expect(bishopKWhite.color).toBe(Color.WHITE);
     expect(bishopKWhite.x).toBe(5);
     expect(bishopKWhite.y).toBe(7);
 
     // Black
-    let pawnABlack = board.getByAddress(0, 1);
+    let pawnABlack = board.get(0, 1);
     expect(pawnABlack === null).toBe(false);
-    expect(pawnABlack.id).toBe('pawnA');
     expect(pawnABlack.color).toBe(Color.BLACK);
     expect(pawnABlack.x).toBe(0);
     expect(pawnABlack.y).toBe(1);
 
-    let pawnHBlack = board.getByAddress(7, 1);
+    let pawnHBlack = board.get(7, 1);
     expect(pawnHBlack === null).toBe(false);
-    expect(pawnHBlack.id).toBe('pawnH');
     expect(pawnHBlack.color).toBe(Color.BLACK);
     expect(pawnHBlack.x).toBe(7);
     expect(pawnHBlack.y).toBe(1);
 
-    let rookQBlack = board.getByAddress(0, 0);
+    let rookQBlack = board.get(0, 0);
     expect(rookQBlack === null).toBe(false);
-    expect(rookQBlack.id).toBe('rookQ');
     expect(rookQBlack.color).toBe(Color.BLACK);
     expect(rookQBlack.x).toBe(0);
     expect(rookQBlack.y).toBe(0);
 
-    let bishopKBlack = board.getByAddress(5, 0);
+    let bishopKBlack = board.get(5, 0);
     expect(bishopKBlack=== null).toBe(false);
-    expect(bishopKBlack.id).toBe('bishopK');
     expect(bishopKBlack.color).toBe(Color.BLACK);
     expect(bishopKBlack.x).toBe(5);
     expect(bishopKBlack.y).toBe(0);
 });
 
 
+test('board build move castle', () => {
+    let board = new Board();
+});
+
+
 test('board moves pieces, and move history behaves correctly', () => {
     let board = new Board();
-    let pawnCBlack = board.getById('pawnC', Color.BLACK);
+    let pawnCBlack = board.get(2, 1);
 
     // before move
-    expect(board.getByAddress(2, 1)).toBe(pawnCBlack);
-    expect(board.getByAddress(2, 3)).toBe(null);
+    expect(board.get(2, 3)).toBe(null);
     expect(pawnCBlack.x).toBe(2);
     expect(pawnCBlack.y).toBe(1);
     expect(board.moveHistory.length).toBe(0);
@@ -94,8 +117,8 @@ test('board moves pieces, and move history behaves correctly', () => {
     board.move(pawnCBlack, 2, 3);
 
     // after move
-    expect(board.getByAddress(2, 1)).toBe(null);
-    expect(board.getByAddress(2, 3)).toBe(pawnCBlack);
+    expect(board.get(2, 1)).toBe(null);
+    expect(board.get(2, 3)).toBe(pawnCBlack);
     expect(pawnCBlack.x).toBe(2);
     expect(pawnCBlack.y).toBe(3);
     expect(board.moveHistory.length).toBe(1);
@@ -108,8 +131,8 @@ test('board moves pieces, and move history behaves correctly', () => {
     board.undo();
 
     // after undo
-    expect(board.getByAddress(2, 1)).toBe(pawnCBlack);
-    expect(board.getByAddress(2, 3)).toBe(null);
+    expect(board.get(2, 1)).toBe(pawnCBlack);
+    expect(board.get(2, 3)).toBe(null);
     expect(pawnCBlack.x).toBe(2);
     expect(pawnCBlack.y).toBe(1);
     expect(board.moveHistory.length).toBe(0);
@@ -130,8 +153,8 @@ test('checkForCheck works', () => {
     board.set(4, 0, blackQueen);
     board.set(4, 7, whiteKing);
 
-    expect(board.getByAddress(4, 0)).toBe(blackQueen);
-    expect(board.getByAddress(4, 7)).toBe(whiteKing);
+    expect(board.get(4, 0)).toBe(blackQueen);
+    expect(board.get(4, 7)).toBe(whiteKing);
     expect(board.getById('queen', Color.BLACK)).toBe(blackQueen);
     expect(board.getById('king', Color.WHITE)).toBe(whiteKing);
 
@@ -307,9 +330,9 @@ test('en passant move history', () => {
 
     board.undo();
     expect(board.moveHistory.length).toBe(0);
-    expect(board.getByAddress(3, 5)).toBe(null);
-    expect(board.getByAddress(4, 4)).toBe(pawnEBlack);
-    expect(board.getByAddress(3, 4)).toBe(pawnDWhite);
+    expect(board.get(3, 5)).toBe(null);
+    expect(board.get(4, 4)).toBe(pawnEBlack);
+    expect(board.get(3, 4)).toBe(pawnDWhite);
 });
 
 test('toString works', () => {
