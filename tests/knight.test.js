@@ -4,8 +4,7 @@ const Knight = require('../lib/pieces/knight');
 
 
 test('knight constructor', () => {
-    let knight = new Knight('knightQ', Color.WHITE, 1, 7);
-    expect(knight.id).toBe('knightQ');
+    let knight = new Knight(Color.WHITE, 1, 7);
     expect(knight.color).toBe(Color.WHITE);
     expect(knight.x).toBe(1);
     expect(knight.y).toBe(7);
@@ -14,10 +13,10 @@ test('knight constructor', () => {
 
 test('knights movement', () => {
     let board = new Board();
-    let knightQBlack = board.getById('knightQ', Color.BLACK);
-    let knightKBlack = board.getById('knightK', Color.BLACK);
-    let knightQWhite = board.getById('knightQ', Color.WHITE);
-    let knightKWhite = board.getById('knightK', Color.WHITE);
+    let knightQBlack = board.get(1, 0);
+    let knightKBlack = board.get(6, 0);
+    let knightQWhite = board.get(1, 7);
+    let knightKWhite = board.get(6, 7);
 
     expect(knightQBlack.evaluate(board, 2, 2)).toBe(true);
     expect(knightQBlack.evaluate(board, 0, 2)).toBe(true);
