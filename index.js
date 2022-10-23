@@ -20,8 +20,7 @@ function playChess() {
                 return;
             }
 
-            let pieceMove = line.split(' ');
-            console.log(chess.move(pieceMove[0], pieceMove[1]));
+            console.log(chess.move(line));
             if (chess.gameOver) process.exit();
 
             rl.setPrompt(`${chess}\n> `);
