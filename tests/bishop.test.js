@@ -5,7 +5,6 @@ const Pawn = require('../lib/pieces/pawn');
 
 test('bishop constructor', () => {
 	let bishop = new Bishop(Color.BLACK, 1, 2);
-
 	expect(bishop.color).toBe(Color.BLACK);
 	expect(bishop.x).toBe(1);
 	expect(bishop.y).toBe(2);
