@@ -103,6 +103,79 @@ test('board build move castle', () => {
 });
 
 
+test('checkForCheck function works', () => {
+    let board = new Board();
+    let blackQueen = new Queen(Color.BLACK, 0, 1); 
+    let whiteKing = new King(Color.WHITE, 0, 0);
+
+    expect(board.checkForCheck(Color.WHITE)).toBe(false);
+    expect(board.checkForCheck(Color.BLACK)).toBe(false);
+
+    board.wipe();
+
+    board.teamMap[Color.WHITE].push(whiteKing);
+    board.teamMap[Color.BLACK].push(blackQueen);
+    board.whiteKing = whiteKing;
+
+    board.set(0, 1, blackQueen);
+    board.set(0, 0, whiteKing);
+
+    expect(board.get(0, 1)).toBe(blackQueen);
+    expect(board.get(0, 0)).toBe(whiteKing);
+
+    expect(board.checkForCheck(Color.WHITE)).toBe(true);
+});
+
+
+test('check mate detection works', () => {
+    let board = new Board();
+
+    expect(board.checkForCheck(Color.WHITE)).toBe(false);
+    expect(board.checkForCheck(Color.BLACK)).toBe(false);
+
+    let whiteRook = new Rook(Color.WHITE, 5, 0);
+    let whiteKing = new King(Color.WHITE, 6, 2);
+    let blackKing = new King(Color.BLACK, 7, 0);
+
+    board.set(5, 0, new Rook(Color.WHITE, 5, 0));
+    board.set(6, 2, new King(Color.WHITE, 6, 2));
+    board.set(7, 0, new King(Color.BLACK, 7, 0));
+
+    board.wipe();
+    board.teamMap[Color.WHITE] = [whiteKing, whiteRook];
+    board.teamMap[Color.BLACK] = [blackKing];
+    board.whiteKing = whiteKing;
+    board.blackKing = blackKing;
+
+    expect(board.checkForCheck(Color.WHITE)).toBe(false);
+    expect(board.checkForCheck(Color.BLACK)).toBe(true);
+});
+
+
+test('stalemate detection works', () => {
+    let board = new Board();
+
+    expect(board.canMove(Color.WHITE)).toBe(true);
+    expect(board.canMove(Color.BLACK)).toBe(true);
+
+    let blackKing = new King(Color.BLACK, 7, 0);
+    let whiteKing = new King(Color.WHITE, 5, 1);
+    let whiteQueen = new Queen(Color.WHITE, 5, 3);
+
+    board.wipe();
+    board.set(7, 0, blackKing);
+    board.set(5, 1, whiteKing);
+    board.set(5, 3, whiteQueen);
+    board.teamMap[Color.WHITE] = [whiteKing, whiteQueen];
+    board.teamMap[Color.BLACK] = [blackKing];
+    board.blackKing = blackKing;
+    board.whiteKing = whiteKing;
+
+    expect(board.canMove(Color.WHITE)).toBe(true);
+    expect(board.canMove(Color.BLACK)).toBe(false);
+});
+
+
 test('board moves pieces, and move history behaves correctly', () => {
     let board = new Board();
     let pawnCBlack = board.get(2, 1);
@@ -141,59 +214,6 @@ test('board moves pieces, and move history behaves correctly', () => {
 });
 
 
-test('checkForCheck works', () => {
-    let board = new Board();
-    let blackQueen = new Queen('queen', Color.BLACK, 4, 0); 
-    let whiteKing = new King('king', Color.WHITE, 4, 7);
-
-    expect(board.checkForCheck(Color.WHITE)).toBe(false);
-    expect(board.checkForCheck(Color.BLACK)).toBe(false);
-
-    board.board = Array(8).fill().map(() => Array(8).fill(null));
-    board.set(4, 0, blackQueen);
-    board.set(4, 7, whiteKing);
-
-    expect(board.get(4, 0)).toBe(blackQueen);
-    expect(board.get(4, 7)).toBe(whiteKing);
-    expect(board.getById('queen', Color.BLACK)).toBe(blackQueen);
-    expect(board.getById('king', Color.WHITE)).toBe(whiteKing);
-
-    expect(board.checkForCheck(Color.WHITE)).toBe(true);
-});
-
-
-test('checkForMate works', () => {
-    let board = new Board();
-
-    expect(board.checkForMate(Color.WHITE)).toBe(false);
-    expect(board.checkForMate(Color.BLACK)).toBe(false);
-
-    board.board = Array(8).fill().map(() => Array(8).fill(null));
-    board.set(5, 0, new Rook('rookQ', Color.WHITE, 5, 0));
-    board.set(6, 2, new King('king', Color.WHITE, 6, 2));
-    board.set(7, 0, new King('king', Color.BLACK, 7, 0));
-
-    expect(board.checkForMate(Color.WHITE)).toBe(false);
-    expect(board.checkForMate(Color.BLACK)).toBe(true);
-});
-
-
-test('checkForStalemate works', () => {
-    let board = new Board();
-
-    expect(board.checkForStalemate(Color.WHITE)).toBe(false);
-    expect(board.checkForStalemate(Color.BLACK)).toBe(false);
-
-    board.board = Array(8).fill().map(() => Array(8).fill(null));
-    board.set(7, 0, new King('king', Color.BLACK, 7, 0));
-    board.set(5, 1, new King('king', Color.WHITE, 5, 1));
-    board.set(5, 3, new Queen('queen', Color.WHITE, 5, 3));
-
-    expect(board.checkForStalemate(Color.WHITE)).toBe(false);
-    expect(board.checkForStalemate(Color.BLACK)).toBe(true);
-});
-
-
 test('pathClear works', () => {
     let board = new Board();
 
@@ -205,35 +225,38 @@ test('pathClear works', () => {
     expect(board.pathClear(7, 7, 1, 1)).toBe(false);
 });
 
-test('promote works', () => {
-    let board = new Board();
-    let pawn = new Pawn('pawnA', Color.WHITE, 0, 0);
+// test('promote works', () => {
+//     let board = new Board();
+//     let pawn = new Pawn(Color.WHITE, 0, 0);
 
-    expect(board.promote(pawn, 'quan')).toBe(false);
-    expect(board.promote(pawn, 'king')).toBe(false);
+//     expect(board.promote(pawn, 'quan')).toBe(false);
+//     expect(board.promote(pawn, 'king')).toBe(false);
 
-    expect(board.promote(pawn, 'queen')).toBe(true);
-    expect(board.promote(pawn, 'rook')).toBe(true);
-    expect(board.promote(pawn, 'bishop')).toBe(true);
-    expect(board.promote(pawn, 'knight')).toBe(true);
-});
+//     expect(board.promote(pawn, 'queen')).toBe(true);
+//     expect(board.promote(pawn, 'rook')).toBe(true);
+//     expect(board.promote(pawn, 'bishop')).toBe(true);
+//     expect(board.promote(pawn, 'knight')).toBe(true);
+// });
 
 // try to test castling basic features, 
 // skip castling out of check, castling function is not called in chess.move if check = true, 
 // so castling does not check if king is currently in check, and only checks if the spaces for castling are
 test('castling works', () => {
     let board = new Board();
-    board.board = Array(8).fill().map(() => Array(8).fill(null));
 
-    let whiteKing = new King('king', Color.WHITE, 4, 7);
+    board.wipe();
+
+    let whiteKing = new King(Color.WHITE, 4, 7);
     board.set(4, 7, whiteKing);
 
-    // if rook has been captured, castling not possible (done)
+    board.teamMap[Color.WHITE] = [whiteKing]
+
+    // if rook has been captured, castling not possible 
     let whiteRook = null;
-    expect(board.castle('k', Color.WHITE)).toBe(false);
+    expect(board.castle('O-O-O', Color.WHITE)).toBe(false);
 
     /**------------------------------------------------------ */
-    // first move needs to be true in order to castle (done)
+    // first move needs to be true in order to castle 
 
     whiteRook = new Rook('rookK', Color.WHITE, 7, 7);
     board.set(7, 7, whiteRook);
@@ -242,7 +265,7 @@ test('castling works', () => {
     expect(whiteRook.firstMove).toBe(true);
     expect(board.castle('k', Color.WHITE)).toBe(true);
 
-    // first move of rook and king is false after castle (done)
+    // first move of rook and king is false after castle 
     expect(whiteKing.firstMove).toBe(false);
     expect(whiteRook.firstMove).toBe(false);
 
