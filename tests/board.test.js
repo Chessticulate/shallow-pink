@@ -1,5 +1,6 @@
 const Board = require('../lib/board');
 const Color = require('../lib/color');
+const Move = require('../lib/move');
 const Bishop = require('../lib/pieces/bishop');
 const King = require('../lib/pieces/king');
 const Pawn = require('../lib/pieces/pawn');
@@ -250,20 +251,26 @@ test('castling works', () => {
     board.set(4, 7, whiteKing);
 
     board.teamMap[Color.WHITE] = [whiteKing]
+    board.whiteKing = whiteKing;
 
     // if rook has been captured, castling not possible 
     let whiteRook = null;
-    expect(board.castle('O-O-O', Color.WHITE)).toBe(false);
+    expect(board.castle('O-O-O', Color.WHITE)).toBe(null);
 
     /**------------------------------------------------------ */
     // first move needs to be true in order to castle 
 
-    whiteRook = new Rook('rookK', Color.WHITE, 7, 7);
+    whiteRook = new Rook(Color.WHITE, 7, 7);
+    board.teamMap[Color.WHITE].push(whiteRook);
     board.set(7, 7, whiteRook);
 
     expect(whiteKing.firstMove).toBe(true);
     expect(whiteRook.firstMove).toBe(true);
-    expect(board.castle('k', Color.WHITE)).toBe(true);
+
+    // this is failing because a successful castle returns a new move obj
+    // maybe its best to just test castling through buildMove function?
+
+    expect(board.castle('O-O', Color.WHITE)).toBe(/** should be a move obj */);
 
     // first move of rook and king is false after castle 
     expect(whiteKing.firstMove).toBe(false);
