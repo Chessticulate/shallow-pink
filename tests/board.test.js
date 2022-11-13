@@ -3,6 +3,7 @@ const Color = require('../lib/color');
 const Move = require('../lib/move');
 const Bishop = require('../lib/pieces/bishop');
 const King = require('../lib/pieces/king');
+const Knight = require('../lib/pieces/knight');
 const Pawn = require('../lib/pieces/pawn');
 const Queen = require('../lib/pieces/queen');
 const Rook = require('../lib/pieces/rook');
@@ -49,55 +50,66 @@ test('correct piece placement on board', () => {
 
     // White
     let pawnAWhite = board.get(0, 6);
-    expect(pawnAWhite === null).toBe(false);
+    expect(pawnAWhite instanceof Pawn).toBe(true);
     expect(pawnAWhite.color).toBe(Color.WHITE);
     expect(pawnAWhite.x).toBe(0);
     expect(pawnAWhite.y).toBe(6);
 
     let pawnHWhite = board.get(7, 6);
-    expect(pawnHWhite === null).toBe(false);
+    expect(pawnHWhite instanceof Pawn).toBe(true);
     expect(pawnHWhite.color).toBe(Color.WHITE);
     expect(pawnHWhite.x).toBe(7);
     expect(pawnHWhite.y).toBe(6);
 
     let rookQWhite = board.get(0, 7);
-    expect(rookQWhite === null).toBe(false);
+    expect(rookQWhite instanceof Rook).toBe(true);
     expect(rookQWhite.color).toBe(Color.WHITE);
     expect(rookQWhite.x).toBe(0);
     expect(rookQWhite.y).toBe(7);
 
     let bishopKWhite = board.get(5, 7);
-    expect(bishopKWhite === null).toBe(false);
+    expect(bishopKWhite instanceof Bishop).toBe(true);
     expect(bishopKWhite.color).toBe(Color.WHITE);
     expect(bishopKWhite.x).toBe(5);
     expect(bishopKWhite.y).toBe(7);
 
+    let knightQWhite = board.get(1, 7);
+    expect(knightQWhite instanceof Knight).toBe(true);
+    expect(knightQWhite.color).toBe(Color.WHITE);
+    expect(knightQWhite.x).toBe(1);
+    expect(knightQWhite.y).toBe(7);
+
     // Black
     let pawnABlack = board.get(0, 1);
-    expect(pawnABlack === null).toBe(false);
+    expect(pawnABlack instanceof Pawn).toBe(true);
     expect(pawnABlack.color).toBe(Color.BLACK);
     expect(pawnABlack.x).toBe(0);
     expect(pawnABlack.y).toBe(1);
 
     let pawnHBlack = board.get(7, 1);
-    expect(pawnHBlack === null).toBe(false);
+    expect(pawnHBlack instanceof Pawn).toBe(true);
     expect(pawnHBlack.color).toBe(Color.BLACK);
     expect(pawnHBlack.x).toBe(7);
     expect(pawnHBlack.y).toBe(1);
 
     let rookQBlack = board.get(0, 0);
-    expect(rookQBlack === null).toBe(false);
+    expect(rookQBlack instanceof Rook).toBe(true);
     expect(rookQBlack.color).toBe(Color.BLACK);
     expect(rookQBlack.x).toBe(0);
     expect(rookQBlack.y).toBe(0);
 
     let bishopKBlack = board.get(5, 0);
-    expect(bishopKBlack=== null).toBe(false);
+    expect(bishopKBlack instanceof Bishop).toBe(true);
     expect(bishopKBlack.color).toBe(Color.BLACK);
     expect(bishopKBlack.x).toBe(5);
     expect(bishopKBlack.y).toBe(0);
-});
 
+    let knightQBlack = board.get(1, 0);
+    expect(knightQBlack instanceof Knight).toBe(true);
+    expect(knightQBlack.color).toBe(Color.BLACK);
+    expect(knightQBlack.x).toBe(1);
+    expect(knightQBlack.y).toBe(0);
+});
 
 test('pathClear works', () => {
     let board = new Board();
@@ -317,8 +329,84 @@ test('castling', () => {
 });
 
 
+test('basic movement', () => {
+    let board = new Board();
+
+    // a few invalid moves
+    expect(board.buildMove("b4", Color.BLACK)).toBe(null);
+    expect(board.buildMove("f6", Color.WHITE)).toBe(null);
+    expect(board.buildMove("Qd7", Color.BLACK)).toBe(null);
+    expect(board.buildMove("Rh7", Color.WHITE)).toBe(null);
+
+    // build black pawn move
+    let blackPawnA = board.get(0, 1);
+    let moveList = board.buildMove("a5", Color.BLACK);
+    expect(moveList !== null).toBe(true);
+    expect(moveList.length).toBe(1);
+    expect(moveList[0].piece).toBe(blackPawnA);
+    expect(moveList[0].destX).toBe(0);
+    expect(moveList[0].destY).toBe(3);
+
+    // do move
+    board.move(moveList);
+    expect(board.get(0, 1)).toBe(null);
+    expect(board.get(0, 3)).toBe(blackPawnA);
+    expect(blackPawnA.x).toBe(0);
+    expect(blackPawnA.y).toBe(3);
+    expect(blackPawnA.firstMove).toBe(false);
+
+    // examine prev move
+    expect(board.prevMove.length).toBe(1);
+    expect(board.prevMove[0].piece).toBe(blackPawnA);
+    expect(board.prevMove[0].destX).toBe(0);
+    expect(board.prevMove[0].destY).toBe(1);
+    expect(board.prevMove[0].firstMove).toBe(true);
+
+    // undo move
+    board.undo();
+    expect(board.prevMove).toBe(null);
+    expect(board.get(0, 3)).toBe(null);
+    expect(board.get(0, 1)).toBe(blackPawnA);
+    expect(blackPawnA.x).toBe(0);
+    expect(blackPawnA.y).toBe(1);
+    expect(blackPawnA.firstMove).toBe(true);
+
+    // build white knight move
+    let whiteKnightQ = board.get(1, 7);
+    moveList = board.buildMove("Na3", Color.WHITE);
+    expect(moveList !== null).toBe(true);
+    expect(moveList.length).toBe(1);
+    expect(moveList[0].piece).toBe(whiteKnightQ);
+    expect(moveList[0].destX).toBe(0);
+    expect(moveList[0].destY).toBe(5);
+
+    // execute move
+    board.move(moveList);
+    expect(board.get(1, 7)).toBe(null);
+    expect(board.get(0, 5)).toBe(whiteKnightQ);
+    expect(whiteKnightQ.x).toBe(0);
+    expect(whiteKnightQ.y).toBe(5);
+    expect(whiteKnightQ.firstMove).toBe(false);
+
+    // examine prevMove
+    expect(board.prevMove.length).toBe(1);
+    expect(board.prevMove[0].piece).toBe(whiteKnightQ);
+    expect(board.prevMove[0].destX).toBe(1);
+    expect(board.prevMove[0].destY).toBe(7);
+    expect(board.prevMove[0].firstMove).toBe(true);
+
+    // undo move
+    board.undo();
+    expect(board.prevMove).toBe(null);
+    expect(board.get(1, 7)).toBe(whiteKnightQ);
+    expect(board.get(0, 5)).toBe(null);
+    expect(whiteKnightQ.x).toBe(1);
+    expect(whiteKnightQ.y).toBe(7);
+    expect(whiteKnightQ.firstMove).toBe(true);
+});
+
+
 test('toString works', () => {
     let board = new Board();
     board.toString();
 });
-
