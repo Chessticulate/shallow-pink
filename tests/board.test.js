@@ -406,7 +406,79 @@ test('basic movement', () => {
 });
 
 
+test('capturing', () => {
+    let board = new Board();
+    board.wipe();
+
+    // add black king + rooks
+    let blackKnight = new Knight(Color.BLACK, 3, 2);
+    let blackKing = new King(Color.BLACK, 0, 0);
+    board.blackKing = blackKing;
+    board.teamMap[Color.BLACK] = [
+        board.set(0, 0, blackKing),
+        board.set(3, 2, blackKnight)
+    ];
+
+    // add white king + rooks
+    let whitePawn = new Pawn(Color.WHITE, 4, 4);
+    let whiteKing = new King(Color.WHITE, 7, 7);
+    board.whiteKing = whiteKing;
+    board.teamMap[Color.WHITE] = [
+        board.set(7, 7, whiteKing),
+        board.set(4, 4, whitePawn)
+    ];
+
+    // can't move with 'x' in move string without capturing
+    expect(board.buildMove("Nxf7", Color.BLACK)).toBe(null);
+
+    // can't capture without 'x' in move str
+    expect(board.buildMove("Ne4", Color.BLACK)).toBe(null);
+
+    // knight capture pawn
+    moveList = board.buildMove("Nxe4", Color.BLACK);
+    expect(moveList === null).toBe(false);
+    expect(moveList.length).toBe(2);
+    expect(moveList[0].piece).toBe(whitePawn);
+    expect(moveList[0].destX).toBe(-1);
+    expect(moveList[0].destY).toBe(-1);
+    expect(moveList[1].piece).toBe(blackKnight);
+    expect(moveList[1].destX).toBe(4);
+    expect(moveList[1].destY).toBe(4);
+
+    // do the move
+    board.move(moveList);
+    expect(board.get(3, 2)).toBe(null);
+    expect(board.get(4, 4)).toBe(blackKnight);
+    expect(blackKnight.firstMove).toBe(false);
+    expect(board.teamMap[Color.BLACK].find(piece => piece === whitePawn)).toBe(undefined);
+
+    // examine prevMove
+    expect(board.prevMove === null).toBe(false);
+    expect(board.prevMove.length).toBe(2);
+    expect(board.prevMove[0].piece).toBe(blackKnight);
+    expect(board.prevMove[0].destX).toBe(3);
+    expect(board.prevMove[0].destY).toBe(2);
+    expect(board.prevMove[0].firstMove).toBe(true);
+    expect(board.prevMove[1].piece).toBe(whitePawn);
+    expect(board.prevMove[1].destX).toBe(4);
+    expect(board.prevMove[1].destY).toBe(4);
+
+    // undo move
+    board.undo();
+    expect(board.prevMove === null).toBe(true);
+    expect(board.get(4, 4)).toBe(whitePawn);
+    expect(whitePawn.x).toBe(4);
+    expect(whitePawn.y).toBe(4);
+    expect(whitePawn.firstMove).toBe(true);
+    expect(board.get(3, 2)).toBe(blackKnight);
+    expect(blackKnight.x).toBe(3);
+    expect(blackKnight.y).toBe(2);
+    expect(blackKnight.firstMove).toBe(true);
+});
+
+
 test('toString works', () => {
     let board = new Board();
     board.toString();
 });
+
