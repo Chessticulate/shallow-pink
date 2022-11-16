@@ -406,74 +406,117 @@ test('basic movement', () => {
 });
 
 
-test('capturing', () => {
-    let board = new Board();
-    board.wipe();
+test('basic capturing', () => {
+    let moveList, board = new Board();
 
-    // add black king + rooks
-    let blackKnight = new Knight(Color.BLACK, 3, 2);
-    let blackKing = new King(Color.BLACK, 0, 0);
-    board.blackKing = blackKing;
-    board.teamMap[Color.BLACK] = [
-        board.set(0, 0, blackKing),
-        board.set(3, 2, blackKnight)
-    ];
+    // assume non-capture moves are working fine
+    let whitePawnD = board.get(3, 6);
+    let blackPawnE = board.get(4, 1);
+    board.move(board.buildMove("d4", Color.WHITE));
+    board.move(board.buildMove("e5", Color.BLACK));
 
-    // add white king + rooks
-    let whitePawn = new Pawn(Color.WHITE, 4, 4);
-    let whiteKing = new King(Color.WHITE, 7, 7);
-    board.whiteKing = whiteKing;
-    board.teamMap[Color.WHITE] = [
-        board.set(7, 7, whiteKing),
-        board.set(4, 4, whitePawn)
-    ];
-
-    // can't move with 'x' in move string without capturing
-    expect(board.buildMove("Nxf7", Color.BLACK)).toBe(null);
-
-    // can't capture without 'x' in move str
-    expect(board.buildMove("Ne4", Color.BLACK)).toBe(null);
-
-    // knight capture pawn
-    moveList = board.buildMove("Nxe4", Color.BLACK);
+    // build white pawn d capture black pawn e
+    moveList = board.buildMove("dxe5", Color.WHITE);
     expect(moveList === null).toBe(false);
     expect(moveList.length).toBe(2);
-    expect(moveList[0].piece).toBe(whitePawn);
+    expect(moveList[0].piece).toBe(blackPawnE);
     expect(moveList[0].destX).toBe(-1);
     expect(moveList[0].destY).toBe(-1);
-    expect(moveList[1].piece).toBe(blackKnight);
+    expect(moveList[1].piece).toBe(whitePawnD);
     expect(moveList[1].destX).toBe(4);
-    expect(moveList[1].destY).toBe(4);
+    expect(moveList[1].destY).toBe(3);
 
-    // do the move
+    // do capture
     board.move(moveList);
-    expect(board.get(3, 2)).toBe(null);
-    expect(board.get(4, 4)).toBe(blackKnight);
-    expect(blackKnight.firstMove).toBe(false);
-    expect(board.teamMap[Color.BLACK].find(piece => piece === whitePawn)).toBe(undefined);
+    expect(board.get(3, 4)).toBe(null);
+    expect(board.get(4, 3)).toBe(whitePawnD);
+    expect(board.teamMap[Color.BLACK].find(piece => piece === blackPawnE)).toBe(undefined);
+
+    // examine prevMove
+    expect(board.prevMove === null).toBe(false);
+    expect(board.prevMove[0].piece).toBe(whitePawnD);
+    expect(board.prevMove[0].destX).toBe(3);
+    expect(board.prevMove[0].destY).toBe(4);
+    expect(board.prevMove[1].piece).toBe(blackPawnE);
+    expect(board.prevMove[1].destX).toBe(4);
+    expect(board.prevMove[1].destY).toBe(3);
+    expect(blackPawnE.x).toBe(-1);
+    expect(blackPawnE.y).toBe(-1);
+
+    // undo move
+    board.undo();
+    expect(board.get(3, 4)).toBe(whitePawnD);
+    expect(board.get(4, 3)).toBe(blackPawnE);
+    expect(board.teamMap[Color.BLACK].find(piece => piece === blackPawnE)).toBe(blackPawnE);
+
+    // redo move and continue
+    board.move(board.buildMove("dxe5", Color.WHITE));
+
+    // build bishop capturing queen
+    let whiteBishopQ = board.get(2, 7);
+    let blackQueen = board.get(3, 0);
+    board.move(board.buildMove("Qg5", Color.BLACK));
+    moveList = board.buildMove("Bxg5", Color.WHITE);
+    expect(moveList === null).toBe(false);
+    expect(moveList[0].piece).toBe(blackQueen);
+    expect(moveList[0].destX).toBe(-1);
+    expect(moveList[0].destY).toBe(-1);
+    expect(moveList[1].piece).toBe(whiteBishopQ);
+    expect(moveList[1].destX).toBe(6);
+    expect(moveList[1].destY).toBe(3);
+
+    // do capture
+    board.move(moveList);
+    expect(board.get(2, 7)).toBe(null);
+    expect(board.get(6, 3)).toBe(whiteBishopQ);
+    expect(board.teamMap[Color.BLACK].find(piece => piece === blackQueen)).toBe(undefined);
 
     // examine prevMove
     expect(board.prevMove === null).toBe(false);
     expect(board.prevMove.length).toBe(2);
-    expect(board.prevMove[0].piece).toBe(blackKnight);
-    expect(board.prevMove[0].destX).toBe(3);
-    expect(board.prevMove[0].destY).toBe(2);
-    expect(board.prevMove[0].firstMove).toBe(true);
-    expect(board.prevMove[1].piece).toBe(whitePawn);
-    expect(board.prevMove[1].destX).toBe(4);
-    expect(board.prevMove[1].destY).toBe(4);
+    expect(board.prevMove[0].piece).toBe(whiteBishopQ);
+    expect(board.prevMove[0].destX).toBe(2);
+    expect(board.prevMove[0].destY).toBe(7);
+    expect(board.prevMove[1].piece).toBe(blackQueen);
+    expect(board.prevMove[1].destX).toBe(6);
+    expect(board.prevMove[1].destY).toBe(3);
 
-    // undo move
+    // undo
     board.undo();
-    expect(board.prevMove === null).toBe(true);
-    expect(board.get(4, 4)).toBe(whitePawn);
-    expect(whitePawn.x).toBe(4);
-    expect(whitePawn.y).toBe(4);
-    expect(whitePawn.firstMove).toBe(true);
-    expect(board.get(3, 2)).toBe(blackKnight);
-    expect(blackKnight.x).toBe(3);
-    expect(blackKnight.y).toBe(2);
-    expect(blackKnight.firstMove).toBe(true);
+    expect(board.get(2, 7)).toBe(whiteBishopQ);
+    expect(board.get(6, 3)).toBe(blackQueen);
+    expect(board.teamMap[Color.BLACK].find(piece => piece === blackQueen)).toBe(blackQueen);
+});
+
+
+test("en passant", () => {
+    let board = new Board();
+    let pawnWhiteD = board.get(3, 6);
+    let pawnBlackE = board.get(4, 1);
+
+    board.move(board.buildMove("d4", Color.WHITE));
+    expect(pawnBlackE.enPassantable).toBe(false);
+    expect(pawnWhiteD.enPassantable).toBe(true);
+
+    board.move(board.buildMove("e6", Color.BLACK));
+    expect(pawnBlackE.enPassantable).toBe(false);
+    expect(pawnWhiteD.enPassantable).toBe(false);
+
+    board.undo();
+    expect(pawnBlackE.enPassantable).toBe(false);
+    expect(pawnWhiteD.enPassantable).toBe(true);
+
+    board.move(board.buildMove("e5", Color.BLACK));
+    expect(pawnBlackE.enPassantable).toBe(true);
+    expect(pawnWhiteD.enPassantable).toBe(false);
+
+    board.undo();
+    expect(pawnBlackE.enPassantable).toBe(false);
+    expect(pawnWhiteD.enPassantable).toBe(true);
+});
+
+
+test("promotion", () => {
 });
 
 
