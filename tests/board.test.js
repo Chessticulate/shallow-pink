@@ -513,6 +513,38 @@ test("en passant", () => {
     board.undo();
     expect(pawnBlackE.enPassantable).toBe(false);
     expect(pawnWhiteD.enPassantable).toBe(true);
+
+    board.move(board.buildMove("a6", Color.BLACK));
+    board.move(board.buildMove("d5", Color.WHITE));
+    board.move(board.buildMove("e5", Color.BLACK));
+
+    let moveList = board.buildMove("dxe6", Color.WHITE);
+    expect(moveList === null).toBe(false);
+    expect(moveList.length).toBe(2);
+    expect(moveList[0].piece).toBe(pawnBlackE);
+    expect(moveList[0].destX).toBe(-1);
+    expect(moveList[0].destY).toBe(-1);
+    expect(moveList[1].piece).toBe(pawnWhiteD);
+    expect(moveList[1].destX).toBe(4);
+    expect(moveList[1].destY).toBe(2);
+
+    board.move(moveList);
+    expect(board.get(3, 3)).toBe(null);
+    expect(board.get(4, 3)).toBe(null);
+    expect(board.get(4, 2)).toBe(pawnWhiteD);
+    expect(pawnWhiteD.x).toBe(4);
+    expect(pawnWhiteD.y).toBe(2);
+    expect(board.teamMap[Color.BLACK].find(piece => piece === pawnBlackE)).toBe(undefined);
+
+    board.undo();
+    expect(board.get(4, 2)).toBe(null);
+    expect(board.get(3, 3)).toBe(pawnWhiteD);
+    expect(pawnWhiteD.x).toBe(3);
+    expect(pawnWhiteD.y).toBe(3);
+    expect(board.get(4, 3)).toBe(pawnBlackE);
+    expect(pawnBlackE.x).toBe(4);
+    expect(pawnBlackE.y).toBe(3);
+    expect(board.teamMap[Color.BLACK].find(piece => piece === pawnBlackE)).toBe(pawnBlackE);
 });
 
 
