@@ -548,8 +548,54 @@ test("en passant", () => {
 });
 
 
-test("promotion", () => {
+test("standard promotion", () => {
+    let board = new Board();
+    let whiteKing = new King(Color.WHITE, 0, 7);
+    let whitePawn = new Pawn(Color.WHITE, 3, 1);
+    let blackKing = new King(Color.BLACK, 7, 7);
+
+    board.wipe();
+
+    board.whiteKing = whiteKing;
+    board.blackKing = blackKing;
+
+    board.teamMap[Color.WHITE] = [
+        board.set(0, 7, whiteKing),
+        board.set(3, 1, whitePawn)
+    ];
+    board.teamMap[Color.BLACK] = [
+        board.set(7, 7, blackKing)
+    ];
+
+    expect(board.buildMove("d8", Color.WHITE)).toBe(null);
+
+    let moveList = board.buildMove("d8=R", Color.WHITE);
+    expect(moveList === null).toBe(false);
+    expect(moveList[0].piece).toBe(whitePawn);
+    expect(moveList[0].destX).toBe(-1);
+    expect(moveList[0].destY).toBe(-1);
+    expect(moveList[1].piece instanceof Rook).toBe(true);
+    expect(moveList[1].destX).toBe(3);
+    expect(moveList[1].destY).toBe(0);
+
+    board.move(moveList);
+    let whiteRook = board.get(3,0);
+    expect(whiteRook instanceof Rook).toBe(true);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whitePawn)).toBe(undefined);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whiteRook)).toBe(whiteRook);
+
+    board.undo();
+    expect(board.get(3, 1)).toBe(whitePawn);
+    expect(board.get(3, 0)).toBe(null);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whitePawn)).toBe(whitePawn);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whiteRook)).toBe(undefined);
 });
+
+
+test("capture promotion", () => {});
+
+
+test("check promotion", () => {});
 
 
 test('toString works', () => {
