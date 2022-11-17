@@ -592,14 +592,128 @@ test("standard promotion", () => {
 });
 
 
-test("capture promotion", () => {});
+test("capture promotion", () => {
+    let board = new Board();
+    let whiteKing = new King(Color.WHITE, 0, 7);
+    let whitePawn = new Pawn(Color.WHITE, 3, 1);
+    let blackKing = new King(Color.BLACK, 7, 7);
+    let blackPawn = new Pawn(Color.BLACK, 4, 0);
 
 
-test("check promotion", () => {});
+    board.wipe();
+
+    board.whiteKing = whiteKing;
+    board.blackKing = blackKing;
+
+    board.teamMap[Color.WHITE] = [
+        board.set(0, 7, whiteKing),
+        board.set(3, 1, whitePawn)
+    ];
+    board.teamMap[Color.BLACK] = [
+        board.set(7, 7, blackKing),
+        board.set(4, 0, blackPawn)
+    ];
+
+    expect(board.buildMove("dxe8", Color.WHITE)).toBe(null);
+
+    let moveList = board.buildMove("dxe8=Q", Color.WHITE);
+    expect(moveList === null).toBe(false);
+    expect(moveList[0].piece).toBe(blackPawn);
+    expect(moveList[0].destX).toBe(-1);
+    expect(moveList[0].destY).toBe(-1);
+    expect(moveList[1].piece).toBe(whitePawn);
+    expect(moveList[1].destX).toBe(-1);
+    expect(moveList[1].destY).toBe(-1);
+    expect(moveList[2].destX).toBe(4);
+    expect(moveList[2].destY).toBe(0);
+    expect(moveList[2].piece instanceof Queen).toBe(true);
+
+    board.move(moveList);
+    let whiteQueen = board.get(4,0);
+    expect(whiteQueen instanceof Queen).toBe(true);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whitePawn)).toBe(undefined);
+    expect(board.teamMap[Color.BLACK].find(piece => piece === blackPawn)).toBe(undefined);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whiteQueen)).toBe(whiteQueen);
+
+    board.undo();
+    expect(board.get(3, 1)).toBe(whitePawn);
+    expect(board.get(4, 0)).toBe(blackPawn);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whitePawn)).toBe(whitePawn);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whiteQueen)).toBe(undefined);
+    expect(board.teamMap[Color.BLACK].find(piece => piece === blackPawn)).toBe(blackPawn);
+});
+
+
+test("check promotion", () => {
+    let board = new Board();
+    let whiteKing = new King(Color.WHITE, 0, 7);
+    let whitePawn = new Pawn(Color.WHITE, 3, 1);
+    let blackKing = new King(Color.BLACK, 1, 1);
+
+    board.wipe();
+
+    board.whiteKing = whiteKing;
+    board.blackKing = blackKing;
+
+    board.teamMap[Color.WHITE] = [
+        board.set(0, 7, whiteKing),
+        board.set(3, 1, whitePawn)
+    ];
+    board.teamMap[Color.BLACK] = [
+        board.set(1, 1, blackKing)
+    ];
+
+    expect(board.buildMove("d8", Color.WHITE)).toBe(null);
+
+    let moveList = board.buildMove("d8=N", Color.WHITE);
+    expect(moveList === null).toBe(false);
+    expect(moveList[0].piece).toBe(whitePawn);
+    expect(moveList[0].destX).toBe(-1);
+    expect(moveList[0].destY).toBe(-1);
+    expect(moveList[1].piece instanceof Knight).toBe(true);
+    expect(moveList[1].destX).toBe(3);
+    expect(moveList[1].destY).toBe(0);
+
+    board.move(moveList);
+    let whiteKnight = board.get(3,0);
+    expect(whiteKnight instanceof Knight).toBe(true);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whitePawn)).toBe(undefined);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whiteKnight)).toBe(whiteKnight);
+    expect(board.checkForCheck(Color.BLACK)).toBe(true);
+
+    board.undo();
+    expect(board.get(3, 1)).toBe(whitePawn);
+    expect(board.get(3, 0)).toBe(null);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whitePawn)).toBe(whitePawn);
+    expect(board.teamMap[Color.WHITE].find(piece => piece === whiteKnight)).toBe(undefined);
+
+    expect(board.checkForCheck(Color.BLACK)).toBe(false);
+});
 
 
 test('toString works', () => {
     let board = new Board();
     board.toString();
+
+//     let boardStr = 
+// `-----------------
+// |♖|♘|♗|♕|♔|♗|♘|♖|
+// -----------------
+// |♙|♙|♙|♙|♙|♙|♙|♙|
+// -----------------
+// | | | | | | | | |
+// -----------------
+// | | | | | | | | |
+// -----------------
+// | | | | | | | | |
+// -----------------
+// | | | | | | | | |
+// -----------------
+// |♟|♟|♟|♟|♟|♟|♟|♟|
+// -----------------
+// |♜|♞|♝|♛|♚|♝|♞|♜|
+// -----------------`
+
+//     expect(board.toString() === boardStr).toBe(true);
 });
 
