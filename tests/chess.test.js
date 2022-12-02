@@ -70,9 +70,8 @@ test('move', () => {
 
     // test if move puts own player in check
     chess.board.wipe();
-    chess.check = true;
 
-    let whiteKing = new King(Color.WHITE, 0, 0);
+    let whiteKing = new King(Color.WHITE, 1, 0);
     let blackKing = new King(Color.BLACK, 7, 7);
     let blackQueen = new Queen(Color.BLACK, 3, 0);
 
@@ -81,19 +80,50 @@ test('move', () => {
     chess.board.whiteKing = whiteKing;
     chess.board.blackKing = blackKing;
 
-    chess.board.set(0, 0, whiteKing);
+    chess.board.set(1, 0, whiteKing);
     chess.board.set(7, 7, blackKing);
     chess.board.set(3, 0, blackQueen);
 
-    moveStr = 'Kb7'
+    moveStr = 'Ka8'
 
-    expect(chess.move(moveStr)).toBe(Status.STILLINCHECK)
+    expect(chess.move(moveStr)).toBe(Status.PUTSINCHECK);
 
-    // test legal move
-    // moveStr = 'a4';
-    // expect(chess.turn).toBe(1);
-    // expect()
-    // expect(chess.move(moveStr)).toBe(Status.MOVEOK);
+    // check if move invalid because STILLINCHECK
+    chess.check = true;
+    expect(chess.move(moveStr)).toBe(Status.STILLINCHECK);
+
+    // check STALEMATE is working
+    chess.board.wipe();
+    chess.check = false;
+
+    whiteKing = new King(Color.WHITE, 0, 1);
+    blackKing = new King(Color.BLACK, 2, 2);
+    blackQueen = new Queen(Color.BLACK, 7, 5);
+
+    chess.board.teamMap[Color.WHITE] = [whiteKing];
+    chess.board.teamMap[Color.BLACK] = [blackKing, blackQueen];
+    chess.board.whiteKing = whiteKing;
+    chess.board.blackKing = blackKing;
+
+    chess.board.set(7, 5, blackQueen);
+    chess.board.set(2, 2, blackKing);
+    chess.board.set(0, 1, whiteKing);
+    chess.turn = 2;
+
+    moveStr = 'Qc8';
+
+    console.log(whiteKing);   
+    console.log(blackKing);
+
+    console.log(chess.toString());
+
+    expect(chess.move(moveStr)).toBe(Status.STALEMATE);
+
+    // TODO
+    // slight issue, if a legal move is submitted, and there are no possible moves for the opponent following this move,
+    // then Status.STALEMATE should be returned instead of Status.MOVEOK. 
+    // Basically stalemate should be delivered on the same turn as the move that causes it.
+
 });
 
 test('toString', () => {
