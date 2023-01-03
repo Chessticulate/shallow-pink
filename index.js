@@ -20,8 +20,14 @@ function playChess() {
                 return;
             }
 
-            console.log(chess.move(line));
-            if (chess.gameOver) process.exit();
+            let result = chess.move(line);
+
+            if (chess.gameOver) {
+                console.log(`${chess}`);
+                process.exit();
+            }
+
+            console.log(result);
 
             rl.setPrompt(`${chess}\n> `);
             rl.prompt();
