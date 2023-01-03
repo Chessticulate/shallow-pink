@@ -59,7 +59,6 @@ test('move', () => {
     let chess = new Chess();
     let moveStr = 'a4';
 
-    console.log(chess.toString());
     // GAMEOVER
     chess.gameOver = true;
     expect(chess.move(moveStr)).toBe(Status.GAMEOVER);
@@ -172,7 +171,6 @@ test('move', () => {
     expect(chess.move(moveStr)).toBe(Status.MOVEOK);
 
     // check that record move is working
-    console.log(chess.history);
     let historyStr = "['e4', 'd5']";
     // expect(chess.history === historyStr).toBe(true);
 });
