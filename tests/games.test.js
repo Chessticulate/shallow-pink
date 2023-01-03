@@ -29,17 +29,24 @@ test('full game (stalemate)', () => {
 		'e3', 'a5', 
 		'Qh5', 'Ra6',
 		'Qxa5', 'h5',
-		'h4', 'R6h6', // Rh6 is ambiguous, rank needs to be included. using rank didn't work
+		'h4', 'R6h6', // Rh6 is ambiguous, rank needs to be included. *Note, using file didn't work
 		'Qxc7', 'f6',
-		'Qxd7'
+		'Qxd7', 'Kf7',
+		'Qxb7', 'Qd3',
+		'Qxb8', 'Qh7',
+		'Qxc8', 'Kg6',
+		'Qe6'
 	];
 	let historyArr = []
 	for (let i = 0; i < moveArr.length; i++) {
 		if (moveArr[i] === 'Qxd7') {
-			console.log(chess.board.toString());
 			expect(chess.move(moveArr[i])).toEqual(Status.CHECK);
+			console.log(chess.board.toString());
 		}
-		expect(chess.move(moveArr[i])).toEqual(Status.MOVEOK);
+		else if (moveArr[i] === 'Qe6') {
+			expect(chess.move(moveArr[i])).toEqual(Status.STALEMATE);
+		}
+		else expect(chess.move(moveArr[i])).toEqual(Status.MOVEOK);
 	}
 
 	console.log('stalemate test \n', chess.board.toString());
