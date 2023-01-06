@@ -1,4 +1,5 @@
 const Board = require('../lib/board');
+const { WHITE, BLACK } = require('../lib/color');
 const Color = require('../lib/color');
 const Move = require('../lib/move');
 const Bishop = require('../lib/pieces/bishop');
@@ -195,6 +196,36 @@ test('stalemate detection', () => {
     expect(board.canMove(Color.BLACK)).toBe(false);
 });
 
+test('insufficient material', () => {
+    let board = new Board();
+
+    board.wipe();
+
+    // initialize pieces so that their is insufficient material
+    let blackKing = new King(Color.BLACK, 7, 0);
+    let whiteKing = new King(Color.WHITE, 5, 1);
+    let whiteBishop = new Bishop(Color.WHITE, 5, 3);
+    let blackKnight = new Knight(Color.WHITE, 1, 1);
+
+    board.set(7, 0, blackKing);
+    board.set(5, 1, whiteKing);
+    board.set(5, 3, whiteBishop);
+    board.set(1, 1, blackKnight);
+    board.teamMap[Color.WHITE] = [whiteKing, whiteBishop];
+    board.teamMap[Color.BLACK] = [blackKing, blackKnight];
+    board.blackKing = blackKing;
+    board.whiteKing = whiteKing;
+
+
+    expect(board.insufficientMaterial()).toBe(true);
+
+    // add another piece so that there is sufficient material
+    let blackPawn = new Pawn(Color.BLACK, 0, 0);
+    board.set(0, 0, blackPawn);
+    board.teamMap[Color.BLACK] = [blackKing, blackKnight, blackPawn];
+
+    expect(board.insufficientMaterial()).toBe(false);
+})
 
 test('castling', () => {
     let board = new Board();

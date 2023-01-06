@@ -19,7 +19,6 @@ test('full game (checkmate)', () => {
 	}
 
 	expect(chess.move('Qh4')).toBe(Status.CHECKMATE);
-	console.log("checkmate test \n", chess.board.toString());
 });
 
 test('full game (stalemate)', () => {
@@ -41,15 +40,12 @@ test('full game (stalemate)', () => {
 	for (let i = 0; i < moveArr.length; i++) {
 		if (moveArr[i] === 'Qxd7') {
 			expect(chess.move(moveArr[i])).toEqual(Status.CHECK);
-			console.log(chess.board.toString());
 		}
 		else if (moveArr[i] === 'Qe6') {
 			expect(chess.move(moveArr[i])).toEqual(Status.STALEMATE);
 		}
 		else expect(chess.move(moveArr[i])).toEqual(Status.MOVEOK);
 	}
-
-	console.log('stalemate test \n', chess.board.toString());
 
 });
 
