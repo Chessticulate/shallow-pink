@@ -2,11 +2,13 @@
 
 const Chess = require('../lib/chess');
 const Board = require('../lib/board');
+const Color = require('../lib/color');
 const Status = require('../lib/status');
 const King = require('../lib/pieces/king');
-const Color = require('../lib/color');
 const Queen = require('../lib/pieces/queen');
 const Rook = require('../lib/pieces/rook');
+const Bishop = require('../lib/pieces/bishop');
+const Knight = require('../lib/pieces/knight');
 const Pawn = require('../lib/pieces/pawn');
 
 test('chess constructor', () => {
@@ -92,6 +94,34 @@ test('move', () => {
     chess.check = true;
     expect(chess.move(moveStr)).toBe(Status.STILLINCHECK);
 
+    // INSUFFICIENT MATERIAL
+    chess.board.wipe();
+
+    // initialize pieces so that their is insufficient material
+    blackKing = new King(Color.BLACK, 7, 0);
+    whiteKing = new King(Color.WHITE, 5, 1);
+    let whiteBishop = new Bishop(Color.WHITE, 5, 3);
+    let blackKnight = new Knight(Color.WHITE, 1, 1);
+
+    chess.board.set(7, 0, blackKing);
+    chess.board.set(5, 1, whiteKing);
+    chess.board.set(5, 3, whiteBishop);
+    chess.board.set(1, 1, blackKnight);
+    chess.board.teamMap[Color.WHITE] = [whiteKing, whiteBishop];
+    chess.board.teamMap[Color.BLACK] = [blackKing, blackKnight];
+    chess.board.blackKing = blackKing;
+    chess.board.whiteKing = whiteKing;
+
+    expect(chess.board.insufficientMaterial()).toBe(true);
+
+    // add another piece so that there is sufficient material
+    let blackPawn = new Pawn(Color.BLACK, 0, 0);
+    chess.board.set(0, 0, blackPawn);
+    chess.board.teamMap[Color.BLACK] = [blackKing, blackKnight, blackPawn];
+
+    expect(chess.board.insufficientMaterial()).toBe(false);
+
+    
     // CHECKMATE
     chess.board.wipe();
     chess.check = false;
