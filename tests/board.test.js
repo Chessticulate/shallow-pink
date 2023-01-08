@@ -173,7 +173,7 @@ test('checkmate detection', () => {
 });
 
 
-test('stalemate detection', () => {
+test('draw detection', () => {
     let board = new Board();
 
     expect(board.canMove(Color.WHITE)).toBe(true);

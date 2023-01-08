@@ -17,7 +17,7 @@ test('chess constructor', () => {
     expect(chess.turn).toBe(1);
     expect(chess.board instanceof Board).toBe(true);
     expect(chess.gameOver).toBe(false);
-    expect(chess.stalemate).toBe(false);
+    expect(chess.draw).toBe(false);
     expect(chess.checkmate).toBe(false);
     expect(chess.check).toBe(false);
     expect(chess.enPassantable).toBe(null);
@@ -46,10 +46,10 @@ test('record move', () => {
     expect(chess.history[2]).toBe('Qxd5#');
     expect(chess.history[3]).toBe('0-1');
 
-    // stalemate
+    // draw
     chess = new Chess();
     chess.gameOver = true;
-    chess.stalemate = true;
+    chess.draw = true;
 
     chess.recordMove(moveStr);
     expect(chess.history[0]).toBe('Qxd5');
@@ -170,7 +170,7 @@ test('move', () => {
 
     // CHECK 
     chess.board.wipe();
-    chess.stalemate = false;
+    chess.draw = false;
     chess.gameOver = false;
 
     whiteKing = new King(Color.WHITE, 0, 1);
