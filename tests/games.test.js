@@ -58,5 +58,23 @@ test('draw (50 move rule)', () => {
 });
 
 test('draw (threefold repetition)', () => {
+	let chess = new Chess();
+
+	let moveArr = [
+		'Nf3', 'Nf6',
+		'Ng1', 'Ng8',
+		'Nf3', 'Nf6',
+		'Ng1', 'Ng8',
+		'Nf3', 'Nf6'
+	];
+
+	for (let i = 0; i < moveArr.length; i++) {
+		if (i === 8) {
+			expect(chess.move(moveArr[i])).toBe(Status.DRAW);
+			break;
+		}
+		else 
+			expect(chess.move(moveArr[i])).toBe(Status.MOVEOK);
+	}
 
 });
