@@ -94,8 +94,10 @@ test('move', () => {
     chess.check = true;
     expect(chess.move(moveStr)).toBe(Status.STILLINCHECK);
 
-    // INSUFFICIENT MATERIAL
-    chess.board.wipe();
+
+    // THREEFOLD REPETITION
+    chess.board = new Board();
+
 
     // initialize pieces so that their is insufficient material
     blackKing = new King(Color.BLACK, 7, 0);
@@ -120,7 +122,6 @@ test('move', () => {
     chess.board.teamMap[Color.BLACK] = [blackKing, blackKnight, blackPawn];
 
     expect(chess.board.insufficientMaterial()).toBe(false);
-
     
     // CHECKMATE
     chess.board.wipe();
@@ -203,6 +204,18 @@ test('move', () => {
     // check that record move is working
     let historyStr = "['e4', 'd5']";
     // expect(chess.history === historyStr).toBe(true);
+});
+
+test.only('threefold repetition', () => {
+    let chess = new Chess();
+
+    chess.move('e4');
+    chess.states[chess.board.stateHash()]++;
+ 
+    chess.board = new Board();
+    chess.turn++;
+
+    expect(chess.move('e4')).toBe(Status.DRAW);
 });
 
 test('toString', () => {
