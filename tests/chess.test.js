@@ -10,6 +10,7 @@ const Rook = require('../lib/pieces/rook');
 const Bishop = require('../lib/pieces/bishop');
 const Knight = require('../lib/pieces/knight');
 const Pawn = require('../lib/pieces/pawn');
+const { CHECK } = require('../lib/status');
 
 test('chess constructor', () => {
     let chess = new Chess();
@@ -57,20 +58,24 @@ test('record move', () => {
     
 });
 
-test('move', () => {
+test('game over', () => {
     let chess = new Chess();
     let moveStr = 'a4';
-
-    // GAMEOVER
     chess.gameOver = true;
+
     expect(chess.move(moveStr)).toBe(Status.GAMEOVER);
+});
 
-    // INVALIDMOVE
-    chess.gameOver = false;
-    moveStr = 'a10';
+test('invalid move', () => {
+    let chess = new Chess();
+    let moveStr = 'a10';
+
     expect(chess.move(moveStr)).toBe(Status.INVALIDMOVE);
+});
 
-    // PUTSINCHECK
+test('illegal move (puts in check/ still in check)', () => {
+    let chess = new Chess();
+    let moveStr = 'Ka8';
     chess.board.wipe();
 
     let whiteKing = new King(Color.WHITE, 1, 0);
@@ -86,22 +91,97 @@ test('move', () => {
     chess.board.set(7, 7, blackKing);
     chess.board.set(3, 0, blackQueen);
 
-    moveStr = 'Ka8'
-
     expect(chess.move(moveStr)).toBe(Status.PUTSINCHECK);
 
-    // STILLINCHECK
-    chess.check = true;
-    expect(chess.move(moveStr)).toBe(Status.STILLINCHECK);
+     // STILLINCHECK
+     chess.check = true;
+     expect(chess.move(moveStr)).toBe(Status.STILLINCHECK);
+});
+
+test('check', () => {
+    let chess = new Chess();
+    let moveStr = 'Qh7';
+
+    chess.board.wipe();
+    chess.draw = false;
+    chess.gameOver = false;
+
+    let whiteKing = new King(Color.WHITE, 0, 1);
+    let blackKing = new King(Color.BLACK, 2, 2);
+    let blackQueen = new Queen(Color.BLACK, 7, 5);
+
+    chess.board.teamMap[Color.WHITE] = [whiteKing];
+    chess.board.teamMap[Color.BLACK] = [blackKing, blackQueen];
+    chess.board.whiteKing = whiteKing;
+    chess.board.blackKing = blackKing;
+
+    chess.board.set(7, 5, blackQueen);
+    chess.board.set(2, 2, blackKing);
+    chess.board.set(0, 1, whiteKing);
+    chess.turn = 2;
 
 
-    // THREEFOLD REPETITION
-    chess.board = new Board();
+    expect(chess.move(moveStr)).toBe(Status.CHECK);
+});
 
+test('checkmate', () => {
+    let chess = new Chess();
+    let moveStr = 'Qb7';
+
+    chess.board.wipe();
+    chess.check = false;
+
+    let whiteKing = new King(Color.WHITE, 0, 1);
+    let blackKing = new King(Color.BLACK, 2, 2);
+    let blackQueen = new Queen(Color.BLACK, 1, 3);
+
+    chess.board.teamMap[Color.WHITE] = [whiteKing];
+    chess.board.teamMap[Color.BLACK] = [blackKing, blackQueen];
+    chess.board.whiteKing = whiteKing;
+    chess.board.blackKing = blackKing;
+
+    chess.board.set(1, 3, blackQueen);
+    chess.board.set(2, 2, blackKing);
+    chess.board.set(0, 1, whiteKing);
+    chess.turn = 2;
+
+    expect(chess.move(moveStr)).toBe(Status.CHECKMATE);
+});
+
+test('stalemate', () => {
+    let chess = new Chess();
+    let moveStr = 'Qc8';
+
+    chess.board.wipe();
+    chess.gameOver = false;
+    chess.checkmate = false;
+    chess.check = false;
+
+    let whiteKing = new King(Color.WHITE, 0, 1);
+    let blackKing = new King(Color.BLACK, 2, 2);
+    let blackQueen = new Queen(Color.BLACK, 7, 5);
+
+    chess.board.teamMap[Color.WHITE] = [whiteKing];
+    chess.board.teamMap[Color.BLACK] = [blackKing, blackQueen];
+    chess.board.whiteKing = whiteKing;
+    chess.board.blackKing = blackKing;
+
+    chess.board.set(7, 5, blackQueen);
+    chess.board.set(2, 2, blackKing);
+    chess.board.set(0, 1, whiteKing);
+    chess.turn = 2;
+
+    expect(chess.move(moveStr)).toBe(Status.STALEMATE);
+});
+
+test('insufficient material', () => {
+    let chess = new Chess();
+
+    chess.board.wipe();
 
     // initialize pieces so that their is insufficient material
-    blackKing = new King(Color.BLACK, 7, 0);
-    whiteKing = new King(Color.WHITE, 5, 1);
+    let blackKing = new King(Color.BLACK, 7, 0);
+    let whiteKing = new King(Color.WHITE, 5, 1);
     let whiteBishop = new Bishop(Color.WHITE, 5, 3);
     let blackKnight = new Knight(Color.WHITE, 1, 1);
 
@@ -114,6 +194,7 @@ test('move', () => {
     chess.board.blackKing = blackKing;
     chess.board.whiteKing = whiteKing;
 
+
     expect(chess.board.insufficientMaterial()).toBe(true);
 
     // add another piece so that there is sufficient material
@@ -122,91 +203,10 @@ test('move', () => {
     chess.board.teamMap[Color.BLACK] = [blackKing, blackKnight, blackPawn];
 
     expect(chess.board.insufficientMaterial()).toBe(false);
-    
-    // CHECKMATE
-    chess.board.wipe();
-    chess.check = false;
+})
 
-    whiteKing = new King(Color.WHITE, 0, 1);
-    blackKing = new King(Color.BLACK, 2, 2);
-    blackQueen = new Queen(Color.BLACK, 1, 3);
 
-    chess.board.teamMap[Color.WHITE] = [whiteKing];
-    chess.board.teamMap[Color.BLACK] = [blackKing, blackQueen];
-    chess.board.whiteKing = whiteKing;
-    chess.board.blackKing = blackKing;
-
-    chess.board.set(1, 3, blackQueen);
-    chess.board.set(2, 2, blackKing);
-    chess.board.set(0, 1, whiteKing);
-    chess.turn = 2;
-
-    moveStr = 'Qb7';
-
-    expect(chess.move(moveStr)).toBe(Status.CHECKMATE);
-
-    // STALEMATE 
-    chess.board.wipe();
-    chess.gameOver = false;
-    chess.checkmate = false;
-    chess.check = false;
-
-    whiteKing = new King(Color.WHITE, 0, 1);
-    blackKing = new King(Color.BLACK, 2, 2);
-    blackQueen = new Queen(Color.BLACK, 7, 5);
-
-    chess.board.teamMap[Color.WHITE] = [whiteKing];
-    chess.board.teamMap[Color.BLACK] = [blackKing, blackQueen];
-    chess.board.whiteKing = whiteKing;
-    chess.board.blackKing = blackKing;
-
-    chess.board.set(7, 5, blackQueen);
-    chess.board.set(2, 2, blackKing);
-    chess.board.set(0, 1, whiteKing);
-    chess.turn = 2;
-
-    moveStr = 'Qc8';
-
-    expect(chess.move(moveStr)).toBe(Status.STALEMATE);
-
-    // CHECK 
-    chess.board.wipe();
-    chess.draw = false;
-    chess.gameOver = false;
-
-    whiteKing = new King(Color.WHITE, 0, 1);
-    blackKing = new King(Color.BLACK, 2, 2);
-    blackQueen = new Queen(Color.BLACK, 7, 5);
-
-    chess.board.teamMap[Color.WHITE] = [whiteKing];
-    chess.board.teamMap[Color.BLACK] = [blackKing, blackQueen];
-    chess.board.whiteKing = whiteKing;
-    chess.board.blackKing = blackKing;
-
-    chess.board.set(7, 5, blackQueen);
-    chess.board.set(2, 2, blackKing);
-    chess.board.set(0, 1, whiteKing);
-    chess.turn = 2;
-
-    moveStr = 'Qh7';
-
-    expect(chess.move(moveStr)).toBe(Status.CHECK);
-
-    // MOVEOK
-    chess = new Chess();
-
-    moveStr = 'e4';
-    expect(chess.move(moveStr)).toBe(Status.MOVEOK);
-    
-    moveStr = 'd5';
-    expect(chess.move(moveStr)).toBe(Status.MOVEOK);
-
-    // check that record move is working
-    let historyStr = "['e4', 'd5']";
-    // expect(chess.history === historyStr).toBe(true);
-});
-
-test.only('threefold repetition', () => {
+test('threefold repetition', () => {
     let chess = new Chess();
 
     chess.move('e4');
@@ -216,6 +216,20 @@ test.only('threefold repetition', () => {
     chess.turn++;
 
     expect(chess.move('e4')).toBe(Status.DRAW);
+});
+
+test('move', () => {
+    let chess = new Chess();
+
+    let moveStr = 'e4';
+    expect(chess.move(moveStr)).toBe(Status.MOVEOK);
+    
+    moveStr = 'd5';
+    expect(chess.move(moveStr)).toBe(Status.MOVEOK);
+
+    // check that record move is working
+    let historyStr = "['e4', 'd5']";
+    // expect(chess.history === historyStr).toBe(true);
 });
 
 test('toString', () => {
