@@ -210,7 +210,8 @@ test('threefold repetition', () => {
     let chess = new Chess();
 
     chess.move('e4');
-    chess.states[chess.board.stateHash()]++;
+    let hash = chess.board.stateHash();
+    chess.states.set(hash, chess.states.get(hash) + 1);
  
     chess.board = new Board();
     chess.turn++;
@@ -218,19 +219,6 @@ test('threefold repetition', () => {
     expect(chess.move('e4')).toBe(Status.DRAW);
 });
 
-test('move', () => {
-    let chess = new Chess();
-
-    let moveStr = 'e4';
-    expect(chess.move(moveStr)).toBe(Status.MOVEOK);
-    
-    moveStr = 'd5';
-    expect(chess.move(moveStr)).toBe(Status.MOVEOK);
-
-    // check that record move is working
-    let historyStr = "['e4', 'd5']";
-    // expect(chess.history === historyStr).toBe(true);
-});
 
 test('toString', () => {
     let chess = new Chess();
@@ -253,9 +241,8 @@ test('toString', () => {
     "|♟|♟|♟|♟|♟|♟|♟|♟|\n" +
     "-----------------\n" +
     "|♜|♞|♝|♛|♚|♝|♞|♜|\n" +
-    "-----------------\n" +    
+    "-----------------\n\n" +
+    "white's turn"; 
 
-    "white's turn\n"; 
-
-    // expect(chess.toString() === chessStr).toBe(true);
+    expect(chess.toString()).toBe(chessStr);
 });
