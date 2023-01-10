@@ -66,7 +66,7 @@ test('game over', () => {
     expect(chess.move(moveStr)).toBe(Status.GAMEOVER);
 });
 
-test('invalid move', () => {
+test('invalid move (incorrect syntax/ impossible move)', () => {
     let chess = new Chess();
     let moveStr = 'a10';
 
@@ -172,6 +172,18 @@ test('stalemate', () => {
     chess.turn = 2;
 
     expect(chess.move(moveStr)).toBe(Status.STALEMATE);
+});
+
+test('50 move rule', () => {
+    let chess = new Chess();
+    chess.fiftyMoveCounter = 99;
+
+    expect(chess.move('Nf3')).toBe(Status.DRAW);
+
+    chess = new Chess();
+    chess.fiftyMoveCounter = 99;
+
+    expect(chess.move('e4')).toBe(Status.MOVEOK);
 });
 
 test('insufficient material', () => {
