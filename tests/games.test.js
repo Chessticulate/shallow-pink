@@ -36,7 +36,6 @@ test('full game (stalemate)', () => {
         'Qxc8', 'Kg6',
         'Qe6'
     ];
-    let historyArr = []
     for (let i = 0; i < moveArr.length; i++) {
         if (moveArr[i] === 'Qxd7') {
             expect(chess.move(moveArr[i])).toEqual(Status.CHECK);

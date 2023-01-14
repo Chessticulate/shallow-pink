@@ -721,10 +721,16 @@ test("check promotion", () => {
     expect(board.checkForCheck(Color.BLACK)).toBe(false);
 });
 
+test('toFEN', () => {
+    let board = new Board();
+    
+    let fenStr = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR';
+
+    expect(board.toFEN() === fenStr).toBe(true);
+});
 
 test('toString works', () => {
     let board = new Board();
-    board.toString();
 
     let boardStr = 
         "-----------------\n" +

@@ -231,6 +231,41 @@ test('threefold repetition', () => {
     expect(chess.move('e4')).toBe(Status.DRAW);
 });
 
+test('toFEN', () => {
+    let chess = new Chess();
+
+    let move1 = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1';
+    let move2 = 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2';
+    let finalFen = 'r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b  - 2 10';
+
+    chess.move('e4');
+    expect(chess.toFEN() === move1).toBe(true);
+
+    chess.move('c5');
+    expect(chess.toFEN() === move2).toBe(true);
+
+    // check late game position
+    chess = new Chess();
+
+    let moveArr = [
+        'e4', 'c5', 
+        'd4', 'cxd4',
+        'Nf3', 'Nc6',
+        'Bc4', 'g6', 
+        'Nc3', 'a6',
+        'Nxd4', 'Nxd4',
+        'Qxd4', 'f5',
+        'O-O', 'e6',
+        'b3', 'Kf7',
+        'Re1'
+    ];
+    for (let i = 0; i < moveArr.length; i++) {
+        chess.move(moveArr[i]);
+    }
+    
+    expect(chess.toFEN() === finalFen).toBe(true);
+});
+
 
 test('toString', () => {
     let chess = new Chess();
