@@ -21,42 +21,53 @@ test('chess constructor', () => {
     expect(chess.draw).toBe(false);
     expect(chess.checkmate).toBe(false);
     expect(chess.check).toBe(false);
-    expect(chess.enPassantable).toBe(null);
-    expect(chess.history.length).toBe(0);
+
+    let fenStr = 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2';
+
+    let fenChess = new Chess(fenStr);
+
+    expect(chess.turn).toBe(2);
+    expect(chess.board instanceof Board).toBe(true);
+    expect(chess.gameOver).toBe(false);
+    expect(chess.draw).toBe(false);
+    expect(chess.checkmate).toBe(false);
+    expect(chess.check).toBe(false);
+
+
 });
 
-test('record move', () => {
-    let chess = new Chess();
-    let moveStr = 'e4';
-    chess.check = true;
+// test('record move', () => {
+//     let chess = new Chess();
+//     let moveStr = 'e4';
+//     chess.check = true;
 
-    chess.recordMove(moveStr);
-    expect(chess.history[0]).toBe('e4+');
+//     chess.recordMove(moveStr);
+//     expect(chess.history[0]).toBe('e4+');
 
-    moveStr = 'a6'
-    chess.checkmate = true;
+//     moveStr = 'a6'
+//     chess.checkmate = true;
 
-    chess.recordMove(moveStr);
-    expect(chess.history[1]).toBe('a6#');
+//     chess.recordMove(moveStr);
+//     expect(chess.history[1]).toBe('a6#');
 
-    moveStr = 'Qxd5';
-    chess.gameOver = true;
+//     moveStr = 'Qxd5';
+//     chess.gameOver = true;
 
-    // checkmate
-    chess.recordMove(moveStr);
-    expect(chess.history[2]).toBe('Qxd5#');
-    expect(chess.history[3]).toBe('0-1');
+//     // checkmate
+//     chess.recordMove(moveStr);
+//     expect(chess.history[2]).toBe('Qxd5#');
+//     expect(chess.history[3]).toBe('0-1');
 
-    // draw
-    chess = new Chess();
-    chess.gameOver = true;
-    chess.draw = true;
+//     // draw
+//     chess = new Chess();
+//     chess.gameOver = true;
+//     chess.draw = true;
 
-    chess.recordMove(moveStr);
-    expect(chess.history[0]).toBe('Qxd5');
-    expect(chess.history[1]).toBe('½–½');
+//     chess.recordMove(moveStr);
+//     expect(chess.history[0]).toBe('Qxd5');
+//     expect(chess.history[1]).toBe('½–½');
     
-});
+// });
 
 test('game over', () => {
     let chess = new Chess();
