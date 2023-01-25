@@ -28,7 +28,7 @@ test('full game (stalemate)', () => {
         'e3', 'a5', 
         'Qh5', 'Ra6',
         'Qxa5', 'h5',
-        'h4', 'R6h6', // Rh6 is ambiguous, rank needs to be included. *Note, using file didn't work
+        'h4', 'Rah6',
         'Qxc7', 'f6',
         'Qxd7', 'Kf7',
         'Qxb7', 'Qd3',
