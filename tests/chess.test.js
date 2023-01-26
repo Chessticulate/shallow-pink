@@ -22,52 +22,53 @@ test('chess constructor', () => {
     expect(chess.checkmate).toBe(false);
     expect(chess.check).toBe(false);
 
-    let fenStr = 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2';
+    // test resume from fen str
+    expect(chess.move("e4")).toBe(Status.MOVEOK);
+    expect(chess.move("c5")).toBe(Status.MOVEOK);
+    expect(chess.toFEN()).toBe("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2");
+    let fenChess = new Chess(chess.toFEN(), chess.states);
 
-    let fenChess = new Chess(fenStr);
-
-    expect(chess.turn).toBe(2);
-    expect(chess.board instanceof Board).toBe(true);
-    expect(chess.gameOver).toBe(false);
-    expect(chess.draw).toBe(false);
-    expect(chess.checkmate).toBe(false);
-    expect(chess.check).toBe(false);
-
-
+    expect(fenChess.turn).toBe(3);
+    expect(fenChess.fiftyMoveCounter).toBe(0);
+    expect(fenChess.states).toBe(chess.states);
+    expect(fenChess.board instanceof Board).toBe(true);
+    expect(JSON.stringify(fenChess.board.enPassantable)).toBe(JSON.stringify(chess.board.enPassantable));
+    expect(fenChess.gameOver).toBe(false);
+    expect(fenChess.draw).toBe(false);
+    expect(fenChess.checkmate).toBe(false);
+    expect(fenChess.check).toBe(false);
+    expect(fenChess.toString()).toBe(chess.toString());
 });
 
-// test('record move', () => {
-//     let chess = new Chess();
-//     let moveStr = 'e4';
-//     chess.check = true;
+test('record move', () => {
+    let chess = new Chess();
+    let moveStr = 'e4';
+    chess.check = true;
 
-//     chess.recordMove(moveStr);
-//     expect(chess.history[0]).toBe('e4+');
+    chess.recordMove(moveStr);
+    expect(chess.prevMove).toBe('e4+');
 
-//     moveStr = 'a6'
-//     chess.checkmate = true;
+    moveStr = 'a6'
+    chess.checkmate = true;
 
-//     chess.recordMove(moveStr);
-//     expect(chess.history[1]).toBe('a6#');
+    chess.recordMove(moveStr);
+    expect(chess.prevMove).toBe('a6#');
 
-//     moveStr = 'Qxd5';
-//     chess.gameOver = true;
+    moveStr = 'Qxd5';
+    chess.gameOver = true;
 
-//     // checkmate
-//     chess.recordMove(moveStr);
-//     expect(chess.history[2]).toBe('Qxd5#');
-//     expect(chess.history[3]).toBe('0-1');
+    // checkmate
+    chess.recordMove(moveStr);
+    expect(chess.prevMove).toBe('Qxd5#');
 
-//     // draw
-//     chess = new Chess();
-//     chess.gameOver = true;
-//     chess.draw = true;
+    // draw
+    chess = new Chess();
+    chess.gameOver = true;
+    chess.draw = true;
 
-//     chess.recordMove(moveStr);
-//     expect(chess.history[0]).toBe('Qxd5');
-//     expect(chess.history[1]).toBe('½–½');
-    
-// });
+    chess.recordMove(moveStr);
+    expect(chess.prevMove).toBe('Qxd5');
+});
 
 test('game over', () => {
     let chess = new Chess();
@@ -273,8 +274,8 @@ test('toFEN', () => {
     for (let i = 0; i < moveArr.length; i++) {
         chess.move(moveArr[i]);
     }
-    
-    expect(chess.toFEN() === finalFen).toBe(true);
+
+    expect(chess.toFEN()).toBe(finalFen);
 });
 
 
