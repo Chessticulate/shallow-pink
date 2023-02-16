@@ -38,6 +38,11 @@ test('chess constructor', () => {
     expect(fenChess.checkmate).toBe(false);
     expect(fenChess.check).toBe(false);
     expect(fenChess.toString()).toBe(chess.toString());
+
+    // late game test, additional test to make sure castling appears as - if no castling sides are available
+    let lateGame = new Chess('r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b - - 2 10');
+
+    expect(lateGame.toFEN()).toBe('r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b - - 2 10');
 });
 
 test('record move', () => {
@@ -248,7 +253,7 @@ test('toFEN', () => {
 
     let move1 = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1';
     let move2 = 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2';
-    let finalFen = 'r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b  - 2 10';
+    let finalFen = 'r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b - - 2 10';
 
     chess.move('e4');
     expect(chess.toFEN() === move1).toBe(true);
