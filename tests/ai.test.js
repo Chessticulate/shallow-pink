@@ -4,6 +4,7 @@ const Pawn = require('../lib/pieces/pawn');
 const King = require('../lib/pieces/king');
 
 const AI = require('../lib/ai');
+const Chess = require('../lib/chess');
 
 
 test('generateMoveStr', () => {
@@ -44,8 +45,22 @@ test('generateMoveStr', () => {
     expect(AI.generateMoveStr(whitePawn, board, 1, 0)).toBe("b8=Q");
 });
 
-test('validMoves', () => {
-    
+test.only('validMoves', () => {
+    // Starting position fen str
+    let fenStr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    let moveSet = AI.validMoves(fenStr);
+
+    // all possible moves from opening position
+    let openingMoveSet = [
+        'a3',  'a4',  'b3',  'b4',
+        'c3',  'c4',  'd3',  'd4',
+        'e3',  'e4',  'f3',  'f4',
+        'g3',  'g4',  'h3',  'h4',
+        'Nc3', 'Na3', 'Nh3', 'Nf3'
+    ];
+
+    expect(moveSet).toEqual(openingMoveSet);
+
 });
 
 
