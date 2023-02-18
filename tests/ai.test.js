@@ -7,15 +7,15 @@ const AI = require('../lib/ai');
 const Chess = require('../lib/chess');
 
 
-test('generateMoveStr', () => {
+test('generateMoveStrs', () => {
     let board = new Board();
     let pawnDBlack = board.get(3, 1);
 
-    expect(AI.generateMoveStr(pawnDBlack, board, 3, 3)).toBe('d5');
+    expect(JSON.stringify(AI.generateMoveStrs(pawnDBlack, board, 3, 3))).toBe("[\"d5\"]");
 
     let knightQWhite = board.get(1, 7);
 
-    expect(AI.generateMoveStr(knightQWhite, board, 2, 5)).toBe('Nc3');
+    expect(JSON.stringify(AI.generateMoveStrs(knightQWhite, board, 2, 5))).toBe("[\"Nc3\"]");
     
     let i = 1;
 
@@ -25,7 +25,7 @@ test('generateMoveStr', () => {
     });
 
     let pawnDWhite = board.get(3, 3);
-    expect(AI.generateMoveStr(pawnDWhite, board, 4, 2)).toBe("dxe6");
+    expect(JSON.stringify(AI.generateMoveStrs(pawnDWhite, board, 4, 2))).toBe("[\"dxe6\"]");
 
     board.wipe();
     let whiteKing = new King(Color.WHITE, 7, 7);
@@ -42,12 +42,12 @@ test('generateMoveStr', () => {
         board.set(7, 7, blackKing)
     ];
 
-    expect(AI.generateMoveStr(whitePawn, board, 1, 0)).toBe("b8=Q");
+    expect(JSON.stringify(AI.generateMoveStrs(whitePawn, board, 1, 0))).toBe("[\"b8=Q\",\"b8=N\",\"b8=B\",\"b8=R\"]");
 });
 
 test('validMoves', () => {
     let chess = new Chess();
-    let moveSet = AI.validMoves(chess.toFEN());
+    let moveSet = AI.legalMoves(chess.toFEN());
 
     // all possible moves from opening position
     let whiteOpeningMoveSet = [
@@ -63,12 +63,13 @@ test('validMoves', () => {
         'c6',  'c5',  'd6',  'd5',
         'e6',  'e5',  'f6',  'f5',
         'g6',  'g5',  'h6',  'h5'
-      ];
+    ];
 
+    console.log(moveSet);
     expect(moveSet).toEqual(whiteOpeningMoveSet);
 
     chess.move('e4');
-    moveSet = AI.validMoves(chess.toFEN());
+    moveSet = AI.legalMoves(chess.toFEN());
 
     expect(moveSet).toEqual(blackOpeningMoveSet);
 
@@ -83,17 +84,20 @@ test('validMoves', () => {
         'f6', 'e6', 'g4'
     ];
     //'d8=R', 'd8=B', 'd8=N' are not present in moveSet
-    
+
     //'Kc5' is present in moveSet, but not in the lateGameMoveSet, which we know is correct.
 
     chess = new Chess('2N3B1/2pP1p2/3p4/4PPr1/1K6/1R3pP1/3p1p1k/8 w - - 0 1');
-    moveSet = AI.validMoves(chess.toFEN());
+    moveSet = AI.legalMoves(chess.toFEN());
 
+    console.log(lateGameMoveSet);
     console.log(moveSet);
 
+    //expect(JSON.stringify(moveSet)).toBe(JSON.stringify(lateGameMoveSet));
     expect(moveSet.length).toBe(lateGameMoveSet.length);
+    lateGameMoveSet.forEach(move => {
+        expect(lateGameMoveSet.includes(move)).toBe(true);
+    });
     // expect(moveSet).toEqual()
-
 });
-
 
