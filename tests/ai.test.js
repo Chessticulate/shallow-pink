@@ -83,9 +83,7 @@ test('validMoves', () => {
         'd8=Q', 'd8=R', 'd8=B', 'd8=N',
         'f6', 'e6', 'g4'
     ];
-    //'d8=R', 'd8=B', 'd8=N' are not present in moveSet
-
-    //'Kc5' is present in moveSet, but not in the lateGameMoveSet, which we know is correct.
+    
 
     chess = new Chess('2N3B1/2pP1p2/3p4/4PPr1/1K6/1R3pP1/3p1p1k/8 w - - 0 1');
     moveSet = AI.legalMoves(chess.toFEN());
