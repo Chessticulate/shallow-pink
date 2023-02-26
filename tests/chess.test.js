@@ -48,29 +48,19 @@ test('chess constructor', () => {
 test('undo move', () => {
     let chess = new Chess();
 
-    // console.log(chess.board.stateHash());
-
     chess.move('f3');
-    // console.log(chess.board.stateHash());
-
     chess.move('e5');
-    // console.log(chess.board.stateHash());
-
     chess.move('g4');
-    // console.log(chess.board.stateHash());
-    
+
     let hash = chess.board.stateHash();
     let map = chess.states;
     let check = chess.check;
+    let fen1 = chess.toFEN();
 
     chess.move('d5');
-    // console.log(chess.board.stateHash());
-    console.log(chess.toFEN())
+    expect(fen1 === chess.toFEN()).toBe(false);
     chess.undo();
-    console.log(chess.toFEN())
-    
-    // console.log(chess.board.stateHash());
-
+    expect(fen1).toBe(chess.toFEN());
 
     expect(chess.turn).toBe(4);
     expect(chess.gameOver).toBe(false);
@@ -89,10 +79,10 @@ test('undo move', () => {
 
     chess.undo();
 
-    expect(chess.turn).toBe(2);
-    expect(chess.gameOver).toBe(gameOver);
+    expect(chess.turn).toBe(4);
+    expect(chess.gameOver).toBe(false);
     expect(chess.draw).toBe(false);
-    expect(chess.check).toBe(check);
+    expect(chess.check).toBe(false);
     expect(chess.prevMove).toBe('g4');
     expect(chess.fiftyMoveCounter).toBe(0);
     expect(chess.states).toBe(map);
