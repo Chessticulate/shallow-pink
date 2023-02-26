@@ -45,7 +45,7 @@ test('generateMoveStrs', () => {
     expect(JSON.stringify(AI.generateMoveStrs(whitePawn, board, 1, 0))).toBe("[\"b8=Q\",\"b8=N\",\"b8=B\",\"b8=R\"]");
 });
 
-test('validMoves', () => {
+test.only('validMoves', () => {
     let chess = new Chess();
     let moveSet = AI.legalMoves(chess.toFEN());
 
@@ -65,7 +65,6 @@ test('validMoves', () => {
         'g6',  'g5',  'h6',  'h5'
     ];
 
-    console.log(moveSet);
     expect(moveSet).toEqual(whiteOpeningMoveSet);
 
     chess.move('e4');
@@ -88,6 +87,7 @@ test('validMoves', () => {
     chess = new Chess('2N3B1/2pP1p2/3p4/4PPr1/1K6/1R3pP1/3p1p1k/8 w - - 0 1');
     moveSet = AI.legalMoves(chess.toFEN());
 
+    // e6 and exd6 are present in lateGameMoveSet, but missing in our moveSet
     console.log(lateGameMoveSet);
     console.log(moveSet);
 
