@@ -73,7 +73,7 @@ test('validMoves', () => {
     expect(moveSet).toEqual(blackOpeningMoveSet);
 
     // late game position
-    let lateGameMoveSet = [
+    let exampleSet1 = [
         'Bh7', 'Bxf7', 'Ne7', 'Na7',
         'Nxd6', 'Nb6', 'Kb5', 'Ka5',
         'Kc4', 'Ka4', 'Kc3', 'Ka3', 
@@ -86,9 +86,36 @@ test('validMoves', () => {
     chess = new Chess('2N3B1/2pP1p2/3p4/4PPr1/1K6/1R3pP1/3p1p1k/8 w - - 0 1');
     moveSet = AI.legalMoves(chess.toFEN());
 
-    expect(moveSet.length).toBe(lateGameMoveSet.length);
+    expect(moveSet.length).toBe(exampleSet1.length);
     moveSet.forEach(move => {
-        expect(lateGameMoveSet.includes(move)).toBe(true);
+        expect(exampleSet1.includes(move)).toBe(true);
+    });
+
+    // late game position 2
+    let exampleSet2 = [
+        'Rh8', 'Rg8', 'Rf8', 'Re8',
+        'Rc8', 'Rb8', 'Rxa8', 'Rxd7',
+        'Kh7', 'Kg7', 'Kf7', 'Kxf5',
+        'Nf8', 'Ng7', 'Ng5', 'Nxc5',
+        'Nd4', 'Bxa8', 'Bxd7', 'Bb7', 
+        'Bxb5', 'Qxd7', 'Qd6', 'Qxf5',
+        'Qe5', 'Qxc5', 'Qd4', 'Qc4',
+        'Qd3', 'Qxb3', 'Qxd2', 'Bxc5',
+        'Ba5', 'Bxc3', 'Bxa3', 'Rxg4',
+        'Rh3', 'Rf3', 'Re3', 'Rd3',
+        'Rxc3', 'Rg2', 'Rg1', 'Nxg4',
+        'Nh3', 'Nd3', 'Nh1', 'Nd1',
+        'exf5', 'bxc3', 'bxa3', 'c8=Q',
+        'c8=R', 'c8=B', 'c8=N', 'h7',
+        'e5', 'e3'
+    ];
+
+    chess = new Chess('n2R4/P1Pn4/1rB1NpKP/1pqQ1r1P/pB2PPp1/ppp3R1/1P1bPN1p/1bk5 w - - 0 1');
+    moveSet = AI.legalMoves(chess.toFEN());
+
+    expect(moveSet.length).toBe(exampleSet2.length);
+    moveSet.forEach(move => {
+        expect(exampleSet2.includes(move)).toBe(true);
     });
 });
 
