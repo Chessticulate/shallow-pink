@@ -139,12 +139,10 @@ test('validMoves', () => {
     chess = new Chess('n2R4/P1Pn4/1rB1NpKP/1pqQ1r1P/pB2PPp1/ppp3R1/1P1bPN1p/1bk5 w - - 0 1');
     moveSet = AI.legalMoves(chess.toFEN());
 
-    console.log(`${chess}`);
     expect(JSON.stringify(moveSet.sort())).toBe(JSON.stringify(exampleSet2.sort()));
-
     expect(moveSet.length).toBe(exampleSet2.length);
+
     moveSet.forEach(move => {
         expect(exampleSet2.includes(move)).toBe(true);
     });
 });
-
