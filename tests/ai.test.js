@@ -1,7 +1,9 @@
 const Color = require('../lib/color');
 const Board = require('../lib/board');
 const Pawn = require('../lib/pieces/pawn');
+const Queen = require('../lib/pieces/queen');
 const King = require('../lib/pieces/king');
+const Knight = require('../lib/pieces/knight');
 
 const AI = require('../lib/ai');
 const Chess = require('../lib/chess');
@@ -9,40 +11,64 @@ const Chess = require('../lib/chess');
 
 test('generateMoveStrs', () => {
     let board = new Board();
+
+    // simple movement
     let pawnDBlack = board.get(3, 1);
-
     expect(JSON.stringify(AI.generateMoveStrs(pawnDBlack, board, 3, 3))).toBe("[\"d5\"]");
-
     let knightQWhite = board.get(1, 7);
-
     expect(JSON.stringify(AI.generateMoveStrs(knightQWhite, board, 2, 5))).toBe("[\"Nc3\"]");
-    
-    let i = 1;
 
+    let i = 1;
     ["d4", "Nc6", "d5", "e5"].forEach(move => {
         board.move(board.buildMove(move, (i % 2 ? Color.WHITE : Color.BLACK)));
         i++;
     });
-
     let pawnDWhite = board.get(3, 3);
     expect(JSON.stringify(AI.generateMoveStrs(pawnDWhite, board, 4, 2))).toBe("[\"dxe6\"]");
 
+    // promotion
     board.wipe();
-    let whiteKing = new King(Color.WHITE, 7, 7);
-    let blackKing = new King(Color.WHITE, 1, 7);
+    let whiteKing = new King(Color.WHITE, 0, 7);
+    let blackKing = new King(Color.WHITE, 7, 0);
     let whitePawn = new Pawn(Color.WHITE, 1, 1);
     board.whiteKing = whiteKing;
     board.blackKing = blackKing;
 
     board.teamMap[Color.WHITE] = [
         board.set(0, 7, whiteKing),
-        board.set(3, 1, whitePawn)
+        board.set(1, 1, whitePawn)
     ];
     board.teamMap[Color.BLACK] = [
-        board.set(7, 7, blackKing)
+        board.set(7, 0, blackKing)
     ];
 
     expect(JSON.stringify(AI.generateMoveStrs(whitePawn, board, 1, 0))).toBe("[\"b8=Q\",\"b8=N\",\"b8=B\",\"b8=R\"]");
+
+    let blackKnight = new Knight(Color.BLACK, 0, 0);
+    board.teamMap[Color.BLACK].push(board.set(blackKnight, 0, 0));
+    expect(JSON.stringify(AI.generateMoveStrs(whitePawn, board, 0, 0))).toBe("[\"bxa8=Q\",\"bxa8=N\",\"bxa8=B\",\"bxa8=R\"]");
+
+    // disambiguation
+    board.wipe();
+    board.whiteKing = whiteKing;
+    board.blackKing = blackKing;
+    let queen1 = new Queen(Color.WHITE, 1, 1);
+    let queen2 = new Queen(Color.WHITE, 1, 5);
+    let queen3 = new Queen(Color.WHITE, 5, 5);
+
+    board.teamMap[Color.WHITE] = [
+        board.set(0, 7, whiteKing),
+        board.set(1, 1, queen1),
+        board.set(5, 5, queen3),
+    ];
+    board.teamMap[Color.BLACK] = [
+        board.set(7, 0, blackKing)
+    ];
+
+    expect(JSON.stringify(AI.generateMoveStrs(queen3, board, 3, 3))).toBe("[\"Qfd5\"]");
+    board.teamMap[Color.WHITE].push(board.set(1, 5, queen2));
+    expect(JSON.stringify(AI.generateMoveStrs(queen1, board, 3, 3))).toBe("[\"Q7d5\"]");
+    expect(JSON.stringify(AI.generateMoveStrs(queen2, board, 3, 3))).toBe("[\"Qb3d5\"]");
 });
 
 test('validMoves', () => {
@@ -112,6 +138,9 @@ test('validMoves', () => {
 
     chess = new Chess('n2R4/P1Pn4/1rB1NpKP/1pqQ1r1P/pB2PPp1/ppp3R1/1P1bPN1p/1bk5 w - - 0 1');
     moveSet = AI.legalMoves(chess.toFEN());
+
+    console.log(`${chess}`);
+    expect(JSON.stringify(moveSet.sort())).toBe(JSON.stringify(exampleSet2.sort()));
 
     expect(moveSet.length).toBe(exampleSet2.length);
     moveSet.forEach(move => {
