@@ -22,6 +22,13 @@ test('board constructor', () => {
 
     expect(board.whiteKing instanceof King).toBe(true);
     expect(board.whiteKing.color).toBe(Color.WHITE);
+
+    // new board from fen string
+    board = new Board('8/2pK4/4P3/1pb3Pq/4N1k1/B7/8/8 w - - 0 1');
+
+    expect(board.toFEN()).toEqual('8/2pK4/4P3/1pb3Pq/4N1k1/B7/8/8');
+    expect(board.castleState).toBe(undefined);
+    expect(board.enPassant).toBe(undefined);
 });
 
 
@@ -225,6 +232,13 @@ test('insufficient material', () => {
     board.teamMap[Color.BLACK] = [blackKing, blackKnight, blackPawn];
 
     expect(board.insufficientMaterial()).toBe(false);
+
+    // test insufficient material from new fen 
+
+    let board2 = new Board('8/8/8/8/1k6/1N6/8/7K w - - 0 1');
+
+    expect(board2.insufficientMaterial()).toBe(true);
+
 })
 
 test('castling', () => {

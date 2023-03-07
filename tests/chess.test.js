@@ -250,34 +250,8 @@ test('50 move rule', () => {
 });
 
 test('insufficient material', () => {
-    let chess = new Chess();
-
-    chess.board.wipe();
-
-    // initialize pieces so that their is insufficient material
-    let blackKing = new King(Color.BLACK, 7, 0);
-    let whiteKing = new King(Color.WHITE, 5, 1);
-    let whiteBishop = new Bishop(Color.WHITE, 5, 3);
-    let blackKnight = new Knight(Color.WHITE, 1, 1);
-
-    chess.board.set(7, 0, blackKing);
-    chess.board.set(5, 1, whiteKing);
-    chess.board.set(5, 3, whiteBishop);
-    chess.board.set(1, 1, blackKnight);
-    chess.board.teamMap[Color.WHITE] = [whiteKing, whiteBishop];
-    chess.board.teamMap[Color.BLACK] = [blackKing, blackKnight];
-    chess.board.blackKing = blackKing;
-    chess.board.whiteKing = whiteKing;
-
-
-    expect(chess.board.insufficientMaterial()).toBe(true);
-
-    // add another piece so that there is sufficient material
-    let blackPawn = new Pawn(Color.BLACK, 0, 0);
-    chess.board.set(0, 0, blackPawn);
-    chess.board.teamMap[Color.BLACK] = [blackKing, blackKnight, blackPawn];
-
-    expect(chess.board.insufficientMaterial()).toBe(false);
+    let chess2 = new Chess('8/8/8/8/1k6/1N6/8/7K w - - 0 1');
+    expect(chess2.board.insufficientMaterial()).toBe(true);
 })
 
 

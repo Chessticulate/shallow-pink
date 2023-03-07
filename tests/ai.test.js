@@ -71,7 +71,7 @@ test('generateMoveStrs', () => {
     expect(JSON.stringify(AI.generateMoveStrs(queen2, board, 3, 3))).toBe("[\"Qb3d5\"]");
 });
 
-test('validMoves', () => {
+test('legal moves', () => {
     let chess = new Chess();
     let moveSet = AI.legalMoves(chess.toFEN());
 
