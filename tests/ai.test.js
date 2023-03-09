@@ -157,3 +157,8 @@ test('evaluate', () => {
     chess = new Chess('7r/4nkn1/p4P1P/1b1pRN2/7K/bPp5/6r1/8 w - - 0 1');
     expect(AI.evaluate(chess.toFEN())).toBe(-14);
 });
+
+// test.only('mainFrame', () => {
+//     let chess = new Chess();
+//     AI.mainFrame(chess.toFEN());
+// });

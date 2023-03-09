@@ -241,7 +241,7 @@ test('50 move rule', () => {
     let chess = new Chess();
     chess.fiftyMoveCounter = 99;
 
-    expect(chess.move('Nf3')).toBe(Status.DRAW);
+    expect(chess.move('Nf3')).toBe(Status.FIFTYMOVERULE);
 
     chess = new Chess();
     chess.fiftyMoveCounter = 99;
