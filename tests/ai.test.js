@@ -7,6 +7,7 @@ const Knight = require('../lib/pieces/knight');
 
 const AI = require('../lib/ai');
 const Chess = require('../lib/chess');
+const { nodeCount } = require('../lib/ai');
 
 
 test('generateMoveStrs', () => {
@@ -146,3 +147,26 @@ test('legal moves', () => {
         expect(exampleSet2.includes(move)).toBe(true);
     });
 });
+
+test('evaluate', () => {
+    let chess = new Chess();
+    expect(AI.evaluate(chess.toFEN())).toBe(0);
+
+    chess = new Chess('3N4/1p4nq/2p5/Q3P2k/2B1b3/PR3R2/3KPP2/8 w - - 0 1');
+    expect(AI.evaluate(chess.toFEN())).toBe(12);
+
+    chess = new Chess('7r/4nkn1/p4P1P/1b1pRN2/7K/bPp5/6r1/8 w - - 0 1');
+    expect(AI.evaluate(chess.toFEN())).toBe(-14);
+});
+
+test.only('miniMax', () => {
+    let chess = new Chess();
+
+    console.log(AI.miniMax(chess.toFEN(), 3, true));
+    console.log(AI.nodeCount);
+});
+
+// test.only('mainFrame', () => {
+//     let chess = new Chess();
+//     AI.mainFrame(chess.toFEN());
+// });

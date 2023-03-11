@@ -69,7 +69,7 @@ test('draw (threefold repetition)', () => {
 
 	for (let i = 0; i < moveArr.length; i++) {
 		if (i === 8) {
-			expect(chess.move(moveArr[i])).toBe(Status.DRAW);
+			expect(chess.move(moveArr[i])).toBe(Status.THREEFOLDREPETITION);
 			break;
 		}
 		else 
