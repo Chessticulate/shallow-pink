@@ -162,7 +162,7 @@ test('evaluate', () => {
 test.only('miniMax', () => {
     let chess = new Chess();
 
-    console.log(AI.miniMax(chess.toFEN(), 2, true));
+    console.log(AI.miniMax(chess.toFEN(), 3));
     console.log(AI.nodeCount);
 });
 
