@@ -9,7 +9,7 @@ const AI = require('../lib/ai');
 const Chess = require('../lib/chess');
 const { nodeCount } = require('../lib/ai');
 
-let chess = new Chess('4b3/8/2BK1k1p/6pP/2P2p2/1p4b1/2p2qP1/4r2r w - - 0 1');
+let chess = new Chess();//('4b3/8/2BK1k1p/6pP/2P2p2/1p4b1/2p2qP1/4r2r w - - 0 1');
 
 console.log(AI.miniMax(chess.toFEN(), 3));
 console.log(AI.nodeCount);
