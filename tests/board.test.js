@@ -15,7 +15,7 @@ test('board constructor', () => {
 
     expect(board.board.length).toBe(8);
     expect(board.board[0].length).toBe(8);
-    expect(board.prevMove).toBe(null);
+    expect(board.history.length).toBe(0);
 
     expect(board.blackKing instanceof King).toBe(true);
     expect(board.blackKing.color).toBe(Color.BLACK);
@@ -298,19 +298,19 @@ test('castling', () => {
     expect(board.get(3, 0)).toBe(blackRook);
     expect(board.get(4, 0)).toBe(null);
 
-    // check prevMove
-    expect(board.prevMove[0].piece).toBe(blackRook);
-    expect(board.prevMove[0].destX).toBe(0);
-    expect(board.prevMove[0].destY).toBe(0);
-    expect(board.prevMove[0].firstMove).toBe(true);
-    expect(board.prevMove[1].piece).toBe(blackKing);
-    expect(board.prevMove[1].destX).toBe(4);
-    expect(board.prevMove[1].destY).toBe(0);
-    expect(board.prevMove[1].firstMove).toBe(true);
+    // check history
+    expect(board.history[0][0].piece).toBe(blackRook);
+    expect(board.history[0][0].destX).toBe(0);
+    expect(board.history[0][0].destY).toBe(0);
+    expect(board.history[0][0].firstMove).toBe(true);
+    expect(board.history[0][1].piece).toBe(blackKing);
+    expect(board.history[0][1].destX).toBe(4);
+    expect(board.history[0][1].destY).toBe(0);
+    expect(board.history[0][1].firstMove).toBe(true);
 
     // undo the move
     board.undo();
-    expect(board.prevMove).toBe(null);
+    expect(board.history.length).toBe(0);
     expect(board.get(0, 0)).toBe(blackRook);
     expect(blackRook.firstMove).toBe(true);
     expect(blackRook.x).toBe(0);
@@ -348,19 +348,19 @@ test('castling', () => {
     expect(board.get(5, 7)).toBe(whiteRook);
     expect(board.get(4, 7)).toBe(null);
 
-    // check prevMove
-    expect(board.prevMove[0].piece).toBe(whiteRook);
-    expect(board.prevMove[0].destX).toBe(7);
-    expect(board.prevMove[0].destY).toBe(7);
-    expect(board.prevMove[0].firstMove).toBe(true);
-    expect(board.prevMove[1].piece).toBe(whiteKing);
-    expect(board.prevMove[1].destX).toBe(4);
-    expect(board.prevMove[1].destY).toBe(7);
-    expect(board.prevMove[1].firstMove).toBe(true);
+    // check history
+    expect(board.history[0][0].piece).toBe(whiteRook);
+    expect(board.history[0][0].destX).toBe(7);
+    expect(board.history[0][0].destY).toBe(7);
+    expect(board.history[0][0].firstMove).toBe(true);
+    expect(board.history[0][1].piece).toBe(whiteKing);
+    expect(board.history[0][1].destX).toBe(4);
+    expect(board.history[0][1].destY).toBe(7);
+    expect(board.history[0][1].firstMove).toBe(true);
 
     // undo the move
     board.undo();
-    expect(board.prevMove).toBe(null);
+    expect(board.history.length).toBe(0);
     expect(board.get(7, 7)).toBe(whiteRook);
     expect(whiteRook.firstMove).toBe(true);
     expect(whiteRook.x).toBe(7);
@@ -401,15 +401,15 @@ test('basic movement', () => {
     expect(blackPawnA.firstMove).toBe(false);
 
     // examine prev move
-    expect(board.prevMove.length).toBe(1);
-    expect(board.prevMove[0].piece).toBe(blackPawnA);
-    expect(board.prevMove[0].destX).toBe(0);
-    expect(board.prevMove[0].destY).toBe(1);
-    expect(board.prevMove[0].firstMove).toBe(true);
+    expect(board.history.length).toBe(1);
+    expect(board.history[0][0].piece).toBe(blackPawnA);
+    expect(board.history[0][0].destX).toBe(0);
+    expect(board.history[0][0].destY).toBe(1);
+    expect(board.history[0][0].firstMove).toBe(true);
 
     // undo move
     board.undo();
-    expect(board.prevMove).toBe(null);
+    expect(board.history.length).toBe(0);
     expect(board.get(0, 3)).toBe(null);
     expect(board.get(0, 1)).toBe(blackPawnA);
     expect(blackPawnA.x).toBe(0);
@@ -433,16 +433,16 @@ test('basic movement', () => {
     expect(whiteKnightQ.y).toBe(5);
     expect(whiteKnightQ.firstMove).toBe(false);
 
-    // examine prevMove
-    expect(board.prevMove.length).toBe(1);
-    expect(board.prevMove[0].piece).toBe(whiteKnightQ);
-    expect(board.prevMove[0].destX).toBe(1);
-    expect(board.prevMove[0].destY).toBe(7);
-    expect(board.prevMove[0].firstMove).toBe(true);
+    // examine history
+    expect(board.history.length).toBe(1);
+    expect(board.history[0][0].piece).toBe(whiteKnightQ);
+    expect(board.history[0][0].destX).toBe(1);
+    expect(board.history[0][0].destY).toBe(7);
+    expect(board.history[0][0].firstMove).toBe(true);
 
     // undo move
     board.undo();
-    expect(board.prevMove).toBe(null);
+    expect(board.history.length).toBe(0);
     expect(board.get(1, 7)).toBe(whiteKnightQ);
     expect(board.get(0, 5)).toBe(null);
     expect(whiteKnightQ.x).toBe(1);
@@ -477,14 +477,14 @@ test('basic capturing', () => {
     expect(board.get(4, 3)).toBe(whitePawnD);
     expect(board.teamMap[Color.BLACK].find(piece => piece === blackPawnE)).toBe(undefined);
 
-    // examine prevMove
-    expect(board.prevMove === null).toBe(false);
-    expect(board.prevMove[0].piece).toBe(whitePawnD);
-    expect(board.prevMove[0].destX).toBe(3);
-    expect(board.prevMove[0].destY).toBe(4);
-    expect(board.prevMove[1].piece).toBe(blackPawnE);
-    expect(board.prevMove[1].destX).toBe(4);
-    expect(board.prevMove[1].destY).toBe(3);
+    // examine history
+    expect(board.history.length).toBe(3);
+    expect(board.history[2][0].piece).toBe(whitePawnD);
+    expect(board.history[2][0].destX).toBe(3);
+    expect(board.history[2][0].destY).toBe(4);
+    expect(board.history[2][1].piece).toBe(blackPawnE);
+    expect(board.history[2][1].destX).toBe(4);
+    expect(board.history[2][1].destY).toBe(3);
     expect(blackPawnE.x).toBe(-1);
     expect(blackPawnE.y).toBe(-1);
 
@@ -516,15 +516,15 @@ test('basic capturing', () => {
     expect(board.get(6, 3)).toBe(whiteBishopQ);
     expect(board.teamMap[Color.BLACK].find(piece => piece === blackQueen)).toBe(undefined);
 
-    // examine prevMove
-    expect(board.prevMove === null).toBe(false);
-    expect(board.prevMove.length).toBe(2);
-    expect(board.prevMove[0].piece).toBe(whiteBishopQ);
-    expect(board.prevMove[0].destX).toBe(2);
-    expect(board.prevMove[0].destY).toBe(7);
-    expect(board.prevMove[1].piece).toBe(blackQueen);
-    expect(board.prevMove[1].destX).toBe(6);
-    expect(board.prevMove[1].destY).toBe(3);
+    // examine history
+    expect(board.history.length).toBe(5);
+    expect(board.history[4].length).toBe(2);
+    expect(board.history[4][0].piece).toBe(whiteBishopQ);
+    expect(board.history[4][0].destX).toBe(2);
+    expect(board.history[4][0].destY).toBe(7);
+    expect(board.history[4][1].piece).toBe(blackQueen);
+    expect(board.history[4][1].destX).toBe(6);
+    expect(board.history[4][1].destY).toBe(3);
 
     // undo
     board.undo();
