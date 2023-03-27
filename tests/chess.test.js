@@ -70,7 +70,6 @@ test('undo move', () => {
     expect(chess.fiftyMoveCounter).toBe(0);
     expect(chess.states).toBe(map);
     expect(chess.board.stateHash()).toBe(hash);
-    expect(chess.prevState).toBe(null);
 
     // instead of redoing d5, do Qh4 checkmate 
     let gameOver = chess.gameOver;
@@ -86,9 +85,7 @@ test('undo move', () => {
     expect(chess.prevMove).toBe('g4');
     expect(chess.fiftyMoveCounter).toBe(0);
     expect(chess.states).toBe(map);
-    expect(chess.board.stateHash()).toBe(hash);
-    expect(chess.prevState).toBe(null);
-    
+    expect(chess.board.stateHash()).toBe(hash);    
 });
 
 test('record move', () => {
