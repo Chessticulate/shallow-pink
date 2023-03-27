@@ -74,7 +74,7 @@ test('generateMoveStrs', () => {
 
 test('legal moves', () => {
     let chess = new Chess();
-    let moveSet = AI.legalMoves(chess.toFEN());
+    let moveSet = AI.legalMoves(chess);
 
     // all possible moves from opening position
     let whiteOpeningMoveSet = [
@@ -85,17 +85,17 @@ test('legal moves', () => {
         'Nc3', 'Na3', 'Nh3', 'Nf3'
     ];
     let blackOpeningMoveSet = [
-        'Nc6', 'Na6', 'Nh6', 'Nf6',
         'a6',  'a5',  'b6',  'b5',
         'c6',  'c5',  'd6',  'd5',
         'e6',  'e5',  'f6',  'f5',
-        'g6',  'g5',  'h6',  'h5'
+        'g6',  'g5',  'h6',  'h5',
+        'Nc6', 'Na6', 'Nh6', 'Nf6',
     ];
 
     expect(moveSet).toEqual(whiteOpeningMoveSet);
 
     chess.move('e4');
-    moveSet = AI.legalMoves(chess.toFEN());
+    moveSet = AI.legalMoves(chess);
 
     expect(moveSet).toEqual(blackOpeningMoveSet);
 
@@ -111,7 +111,7 @@ test('legal moves', () => {
     ];
 
     chess = new Chess('2N3B1/2pP1p2/3p4/4PPr1/1K6/1R3pP1/3p1p1k/8 w - - 0 1');
-    moveSet = AI.legalMoves(chess.toFEN());
+    moveSet = AI.legalMoves(chess);
 
     expect(moveSet.length).toBe(exampleSet1.length);
     moveSet.forEach(move => {
@@ -138,7 +138,7 @@ test('legal moves', () => {
     ];
 
     chess = new Chess('n2R4/P1Pn4/1rB1NpKP/1pqQ1r1P/pB2PPp1/ppp3R1/1P1bPN1p/1bk5 w - - 0 1');
-    moveSet = AI.legalMoves(chess.toFEN());
+    moveSet = AI.legalMoves(chess);
 
     expect(JSON.stringify(moveSet.sort())).toBe(JSON.stringify(exampleSet2.sort()));
     expect(moveSet.length).toBe(exampleSet2.length);
@@ -150,23 +150,13 @@ test('legal moves', () => {
 
 test('evaluate', () => {
     let chess = new Chess();
-    expect(AI.evaluate(chess.toFEN())).toBe(0);
+    expect(AI.evaluate(chess)).toBe(0);
 
     chess = new Chess('3N4/1p4nq/2p5/Q3P2k/2B1b3/PR3R2/3KPP2/8 w - - 0 1');
-    expect(AI.evaluate(chess.toFEN())).toBe(12);
+    expect(AI.evaluate(chess)).toBe(12);
 
     chess = new Chess('7r/4nkn1/p4P1P/1b1pRN2/7K/bPp5/6r1/8 w - - 0 1');
-    expect(AI.evaluate(chess.toFEN())).toBe(-14);
+    expect(AI.evaluate(chess)).toBe(-14);
 });
 
-test.only('miniMax', () => {
-    let chess = new Chess();
 
-    //console.log(AI.miniMax(chess.toFEN(), 3));
-    //console.log(AI.nodeCount);
-});
-
-// test.only('mainFrame', () => {
-//     let chess = new Chess();
-//     AI.mainFrame(chess.toFEN());
-// });
