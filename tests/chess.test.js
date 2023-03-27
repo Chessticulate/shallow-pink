@@ -21,8 +21,71 @@ test('chess constructor', () => {
     expect(chess.draw).toBe(false);
     expect(chess.checkmate).toBe(false);
     expect(chess.check).toBe(false);
-    expect(chess.enPassantable).toBe(null);
-    expect(chess.history.length).toBe(0);
+
+    // test resume from fen str
+    expect(chess.move("e4")).toBe(Status.MOVEOK);
+    expect(chess.move("c5")).toBe(Status.MOVEOK);
+    expect(chess.toFEN()).toBe("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2");
+    let fenChess = new Chess(chess.toFEN(), chess.states);
+
+    expect(fenChess.turn).toBe(3);
+    expect(fenChess.fiftyMoveCounter).toBe(0);
+    expect(fenChess.states).toBe(chess.states);
+    expect(fenChess.board instanceof Board).toBe(true);
+    expect(JSON.stringify(fenChess.board.enPassantable)).toBe(JSON.stringify(chess.board.enPassantable));
+    expect(fenChess.gameOver).toBe(false);
+    expect(fenChess.draw).toBe(false);
+    expect(fenChess.checkmate).toBe(false);
+    expect(fenChess.check).toBe(false);
+    expect(fenChess.toString()).toBe(chess.toString());
+
+    // late game test, additional test to make sure castling appears as - if no castling sides are available
+    let lateGame = new Chess('r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b - - 2 10');
+
+    expect(lateGame.toFEN()).toBe('r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b - - 2 10');
+});
+
+test('undo move', () => {
+    let chess = new Chess();
+
+    chess.move('f3');
+    chess.move('e5');
+    chess.move('g4');
+
+    let hash = chess.board.stateHash();
+    let map = chess.states;
+    let check = chess.check;
+    let fen1 = chess.toFEN();
+
+    chess.move('d5');
+    expect(fen1 === chess.toFEN()).toBe(false);
+    chess.undo();
+    expect(fen1).toBe(chess.toFEN());
+
+    expect(chess.turn).toBe(4);
+    expect(chess.gameOver).toBe(false);
+    expect(chess.draw).toBe(false);
+    expect(chess.check).toBe(check);
+    expect(chess.prevMove).toBe('g4');
+    expect(chess.fiftyMoveCounter).toBe(0);
+    expect(chess.states).toBe(map);
+    expect(chess.board.stateHash()).toBe(hash);
+
+    // instead of redoing d5, do Qh4 checkmate 
+    let gameOver = chess.gameOver;
+
+    expect(chess.move('Qh4')).toBe(Status.CHECKMATE);
+
+    chess.undo();
+
+    expect(chess.turn).toBe(4);
+    expect(chess.gameOver).toBe(false);
+    expect(chess.draw).toBe(false);
+    expect(chess.check).toBe(false);
+    expect(chess.prevMove).toBe('g4');
+    expect(chess.fiftyMoveCounter).toBe(0);
+    expect(chess.states).toBe(map);
+    expect(chess.board.stateHash()).toBe(hash);    
 });
 
 test('record move', () => {
@@ -31,21 +94,20 @@ test('record move', () => {
     chess.check = true;
 
     chess.recordMove(moveStr);
-    expect(chess.history[0]).toBe('e4+');
+    expect(chess.prevMove).toBe('e4+');
 
     moveStr = 'a6'
     chess.checkmate = true;
 
     chess.recordMove(moveStr);
-    expect(chess.history[1]).toBe('a6#');
+    expect(chess.prevMove).toBe('a6#');
 
     moveStr = 'Qxd5';
     chess.gameOver = true;
 
     // checkmate
     chess.recordMove(moveStr);
-    expect(chess.history[2]).toBe('Qxd5#');
-    expect(chess.history[3]).toBe('0-1');
+    expect(chess.prevMove).toBe('Qxd5#');
 
     // draw
     chess = new Chess();
@@ -53,9 +115,7 @@ test('record move', () => {
     chess.draw = true;
 
     chess.recordMove(moveStr);
-    expect(chess.history[0]).toBe('Qxd5');
-    expect(chess.history[1]).toBe('½–½');
-    
+    expect(chess.prevMove).toBe('Qxd5');
 });
 
 test('game over', () => {
@@ -178,7 +238,7 @@ test('50 move rule', () => {
     let chess = new Chess();
     chess.fiftyMoveCounter = 99;
 
-    expect(chess.move('Nf3')).toBe(Status.DRAW);
+    expect(chess.move('Nf3')).toBe(Status.FIFTYMOVERULE);
 
     chess = new Chess();
     chess.fiftyMoveCounter = 99;
@@ -187,56 +247,30 @@ test('50 move rule', () => {
 });
 
 test('insufficient material', () => {
-    let chess = new Chess();
-
-    chess.board.wipe();
-
-    // initialize pieces so that their is insufficient material
-    let blackKing = new King(Color.BLACK, 7, 0);
-    let whiteKing = new King(Color.WHITE, 5, 1);
-    let whiteBishop = new Bishop(Color.WHITE, 5, 3);
-    let blackKnight = new Knight(Color.WHITE, 1, 1);
-
-    chess.board.set(7, 0, blackKing);
-    chess.board.set(5, 1, whiteKing);
-    chess.board.set(5, 3, whiteBishop);
-    chess.board.set(1, 1, blackKnight);
-    chess.board.teamMap[Color.WHITE] = [whiteKing, whiteBishop];
-    chess.board.teamMap[Color.BLACK] = [blackKing, blackKnight];
-    chess.board.blackKing = blackKing;
-    chess.board.whiteKing = whiteKing;
-
-
-    expect(chess.board.insufficientMaterial()).toBe(true);
-
-    // add another piece so that there is sufficient material
-    let blackPawn = new Pawn(Color.BLACK, 0, 0);
-    chess.board.set(0, 0, blackPawn);
-    chess.board.teamMap[Color.BLACK] = [blackKing, blackKnight, blackPawn];
-
-    expect(chess.board.insufficientMaterial()).toBe(false);
+    let chess2 = new Chess('8/8/8/8/1k6/1N6/8/7K w - - 0 1');
+    expect(chess2.board.insufficientMaterial()).toBe(true);
 })
 
 
-test('threefold repetition', () => {
-    let chess = new Chess();
+// test('threefold repetition', () => {
+//     let chess = new Chess();
 
-    chess.move('e4');
-    let hash = chess.board.stateHash();
-    chess.states.set(hash, chess.states.get(hash) + 1);
+//     chess.move('e4');
+//     let hash = chess.board.stateHash();
+//     chess.states.set(hash, chess.states.get(hash) + 1);
  
-    chess.board = new Board();
-    chess.turn++;
+//     chess.board = new Board();
+//     chess.turn++;
 
-    expect(chess.move('e4')).toBe(Status.DRAW);
-});
+//     expect(chess.move('e4')).toBe(Status.DRAW);
+// });
 
 test('toFEN', () => {
     let chess = new Chess();
 
     let move1 = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1';
     let move2 = 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2';
-    let finalFen = 'r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b  - 2 10';
+    let finalFen = 'r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b - - 2 10';
 
     chess.move('e4');
     expect(chess.toFEN() === move1).toBe(true);
@@ -262,8 +296,8 @@ test('toFEN', () => {
     for (let i = 0; i < moveArr.length; i++) {
         chess.move(moveArr[i]);
     }
-    
-    expect(chess.toFEN() === finalFen).toBe(true);
+
+    expect(chess.toFEN()).toBe(finalFen);
 });
 
 

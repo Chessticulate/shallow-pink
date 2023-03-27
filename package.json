@@ -4,7 +4,8 @@
   "description": "Chess engine implemented in Node.js",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "debug": "node inspect $(npm bin)/jest --runInBand"
   },
   "repository": {
     "type": "git",
