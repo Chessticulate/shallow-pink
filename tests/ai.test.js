@@ -159,14 +159,10 @@ test('evaluate', () => {
     expect(AI.evaluate(chess.toFEN())).toBe(-14);
 });
 
-test.only('miniMax', () => {
-    let chess = new Chess();
-
-    //console.log(AI.miniMax(chess.toFEN(), 3));
-    //console.log(AI.nodeCount);
+test.only('sort moves', () => {
+    // e4 d5
+    let chess = new Chess('rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 1');
+    
+    console.log(AI.legalMoves(chess));
 });
 
-// test.only('mainFrame', () => {
-//     let chess = new Chess();
-//     AI.mainFrame(chess.toFEN());
-// });
