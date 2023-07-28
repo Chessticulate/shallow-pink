@@ -9,7 +9,7 @@ const AI = require('../lib/ai');
 const Chess = require('../lib/chess');
 const { nodeCount } = require('../lib/ai');
 
-
+// there is no point in evaluating either rook or bishop promotions, as a queen has both of their movesets combined
 test('generateMoveStrs', () => {
     let board = new Board();
 
@@ -43,11 +43,11 @@ test('generateMoveStrs', () => {
         board.set(7, 0, blackKing)
     ];
 
-    expect(JSON.stringify(AI.generateMoveStrs(whitePawn, board, 1, 0))).toBe("[\"b8=Q\",\"b8=N\",\"b8=B\",\"b8=R\"]");
+    expect(JSON.stringify(AI.generateMoveStrs(whitePawn, board, 1, 0))).toBe("[\"b8=Q\",\"b8=N\"]");
 
     let blackKnight = new Knight(Color.BLACK, 0, 0);
     board.teamMap[Color.BLACK].push(board.set(blackKnight, 0, 0));
-    expect(JSON.stringify(AI.generateMoveStrs(whitePawn, board, 0, 0))).toBe("[\"bxa8=Q\",\"bxa8=N\",\"bxa8=B\",\"bxa8=R\"]");
+    expect(JSON.stringify(AI.generateMoveStrs(whitePawn, board, 0, 0))).toBe("[\"bxa8=Q\",\"bxa8=N\"]");
 
     // disambiguation
     board.wipe();
@@ -159,7 +159,7 @@ test('evaluate', () => {
     expect(AI.evaluate(chess.toFEN())).toBe(-14);
 });
 
-test.only('sort moves', () => {
+test('sort moves', () => {
     // e4 d5
     let chess = new Chess('rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 1');
     
