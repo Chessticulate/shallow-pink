@@ -11,10 +11,30 @@ const { nodeCount, memoizedNodes } = require('../lib/ai');
 
 let chess = new Chess();
 
-console.log("best move: ", AI.miniMax(chess.toFEN(), 5));
-console.log("nodes visited: ",AI.nodeCount);
-console.log("nodes pruned: ",AI.prunedNodes);
-console.log("nodes memoized: ", AI.memoizedNodes);
+
+function miniMaxTestGame(chess) {
+    let currentMoves;
+    while(!chess.gameOver) {
+        console.log(chess.toString());
+        console.log(chess.toFEN());
+        // currentMoves = legalMoves(chess);
+        // let move = currentMoves[Math.floor(Math.random() * currentMoves.length)];
+        let move = AI.miniMax(chess.toFEN(), 5);
+        console.log(move, '->', chess.move(move));
+    }
+    console.log(chess.toString());
+    console.log(chess.toFEN());
+}
+
+miniMaxTestGame(chess);
+
+
+// old tests
+
+// console.log("best move: ", AI.miniMax(chess.toFEN(), 5));
+// console.log("nodes visited: ",AI.nodeCount);
+// console.log("nodes pruned: ",AI.prunedNodes);
+// console.log("nodes memoized: ", AI.memoizedNodes);
 
 /** NOTES
  *  
