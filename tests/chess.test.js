@@ -6,11 +6,8 @@ const Color = require('../lib/color');
 const Status = require('../lib/status');
 const King = require('../lib/pieces/king');
 const Queen = require('../lib/pieces/queen');
-const Rook = require('../lib/pieces/rook');
-const Bishop = require('../lib/pieces/bishop');
-const Knight = require('../lib/pieces/knight');
-const Pawn = require('../lib/pieces/pawn');
-const { CHECK } = require('../lib/status');
+const {xToFile, yToRank, fileToX, rankToY} = require("../lib/addressMaps");
+
 
 test('chess constructor', () => {
     let chess = new Chess();
@@ -249,7 +246,7 @@ test('50 move rule', () => {
 test('insufficient material', () => {
     let chess2 = new Chess('8/8/8/8/1k6/1N6/8/7K w - - 0 1');
     expect(chess2.board.insufficientMaterial()).toBe(true);
-})
+});
 
 
 // test('threefold repetition', () => {
@@ -265,6 +262,31 @@ test('insufficient material', () => {
 //     expect(chess.move('e4')).toBe(Status.DRAW);
 // });
 
+test('flipBoard', () => {
+    let chess = new Chess();
+
+    expect(xToFile).toEqual({0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'});
+
+    expect(yToRank).toEqual({7: '1', 6: '2', 5: '3', 4: '4', 3: '5', 2: '6', 1: '7', 0: '8'});
+
+    expect(fileToX).toEqual({'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7});
+
+    expect(rankToY).toEqual({'1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0});
+
+    // flip board 
+
+    chess.flipBoard();
+
+    expect(xToFile).toEqual({7: 'a', 6: 'b', 5: 'c', 4: 'd', 3: 'e', 2: 'f', 1: 'g', 0: 'h'});
+
+    expect(yToRank).toEqual({0: '1', 1: '2', 2: '3', 3: '4', 4: '5', 5: '6', 6: '7', 7: '8'});
+
+    expect(fileToX).toEqual({'a': 7, 'b': 6, 'c': 5, 'd': 4, 'e': 3, 'f': 2, 'g': 1, 'h': 0});
+
+    expect(rankToY).toEqual({'1': 0, '2': 1, '3': 2, '4': 3, '5': 4, '6': 5, '7': 6, '8': 7});
+
+});
+
 test('toFEN', () => {
     let chess = new Chess();
 
@@ -273,10 +295,11 @@ test('toFEN', () => {
     let finalFen = 'r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b - - 2 10';
 
     chess.move('e4');
-    expect(chess.toFEN() === move1).toBe(true);
+    
+    expect(chess.toFEN()).toBe(move1);
 
     chess.move('c5');
-    expect(chess.toFEN() === move2).toBe(true);
+    expect(chess.toFEN()).toBe(move2);
 
     // check late game position
     chess = new Chess();
