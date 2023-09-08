@@ -266,24 +266,27 @@ test('flipBoard', () => {
     let chess = new Chess();
 
     expect(xToFile).toEqual({0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'});
-
     expect(yToRank).toEqual({7: '1', 6: '2', 5: '3', 4: '4', 3: '5', 2: '6', 1: '7', 0: '8'});
-
     expect(fileToX).toEqual({'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7});
-
     expect(rankToY).toEqual({'1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0});
 
     // flip board 
 
+    // blacks perspective
     chess.flipBoard();
 
     expect(xToFile).toEqual({7: 'a', 6: 'b', 5: 'c', 4: 'd', 3: 'e', 2: 'f', 1: 'g', 0: 'h'});
-
     expect(yToRank).toEqual({0: '1', 1: '2', 2: '3', 3: '4', 4: '5', 5: '6', 6: '7', 7: '8'});
-
     expect(fileToX).toEqual({'a': 7, 'b': 6, 'c': 5, 'd': 4, 'e': 3, 'f': 2, 'g': 1, 'h': 0});
-
     expect(rankToY).toEqual({'1': 0, '2': 1, '3': 2, '4': 3, '5': 4, '6': 5, '7': 6, '8': 7});
+
+    // whites perspective
+    chess.flipBoard();
+    expect(chess.move('e4')).toBe(Status.MOVEOK);
+
+    // blacks perspective
+    chess.flipBoard();
+    expect(chess.move('d5')).toBe(Status.MOVEOK);
 
 });
 
