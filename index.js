@@ -9,6 +9,12 @@ const readline = require('readline');
 function playChess() {
     const chess = new Chess();
 
+    if (process.argv.includes('--ai-white')) {
+        let move = chess.suggestMove(3);
+        let result = chess.move(move);
+        console.log(`AI move: ${move}, result: ${result}`)
+    }
+
     return new Promise(function(resolve, reject) {
         let rl = readline.createInterface(process.stdin, process.stdout);
         rl.setPrompt(`${chess}\n> `);
@@ -29,18 +35,20 @@ function playChess() {
 
             console.log(result);
 
+            if (result === Chess.Status.MOVEOK || result === Chess.Status.CHECK) {
+                if (process.argv.includes('--ai-black') || process.argv.includes('--ai-white')) {
+                    let move = chess.suggestMove(3);
+                    chess.move(move);
+                    console.log(`AI move: ${move}`)
+                }
+            }
+
             rl.setPrompt(`${chess}\n> `);
             rl.prompt();
         });
     })
 }
 
-
-async function main() {
-    await playChess();
-}
-
-
 if (require.main === module) {
-    main();
+    playChess();
 }
