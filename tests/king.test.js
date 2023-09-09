@@ -44,3 +44,15 @@ test('test king can only capture pieces of opposite color', () => {
 
     expect(king.evaluate(board, 1, 1)).toBe(true);
 });
+
+test('king flipPerspective', () => {
+    const blackKing = new King(Color.BLACK, 0, 0);
+
+    expect(blackKing.x).toBe(0);
+    expect(blackKing.y).toBe(0);
+
+    blackKing.flipPerspective();
+
+    expect(blackKing.x).toBe(7);
+    expect(blackKing.y).toBe(7);
+});
