@@ -98,3 +98,21 @@ test('en passant', () => {
     expect(pawnEBlack.evaluate(board, 3, 5)).toBe(true);
 });
 
+test('pawn flipPerspective', () => {
+    const whitePawn = new Pawn(Color.WHITE, 0, 6);
+
+    expect(whitePawn.x).toBe(0);
+    expect(whitePawn.y).toBe(6);
+    whitePawn.moveSet.forEach(move => {
+        expect(move[1] < 0).toBe(true);
+    });
+
+    whitePawn.flipPerspective();
+
+    expect(whitePawn.x).toBe(7);
+    expect(whitePawn.y).toBe(1);
+    whitePawn.moveSet.forEach(move => {
+        expect(move[1] > 0).toBe(true);
+    });
+});
+

@@ -768,7 +768,7 @@ test('toString works', () => {
     expect(board.toString() === boardStr).toBe(true);
 });
 
-test('flipBoard', () => {
+test('flipPerspective', () => {
     let board = new Board();
 
     let flippedBoard = 
@@ -790,7 +790,7 @@ test('flipBoard', () => {
     "|♖|♘|♗|♔|♕|♗|♘|♖|\n" +
     "-----------------\n";
 
-    board.flipBoard();
+    board.flipPerspective();
 
     expect(board.toString() === flippedBoard).toBe(true);
 });
