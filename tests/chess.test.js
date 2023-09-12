@@ -285,11 +285,11 @@ test('generateMoveStrs', () => {
         chess.board.set(7, 0, blackKing)
     ];
 
-    expect(JSON.stringify(chess.generateMoveStrs(whitePawn, 1, 0))).toBe("[\"b8=Q\",\"b8=N\",\"b8=B\",\"b8=R\"]");
+    expect(JSON.stringify(chess.generateMoveStrs(whitePawn, 1, 0))).toBe("[\"b8=Q\",\"b8=N\"]");
 
     let blackKnight = new Knight(Color.BLACK, 0, 0);
     chess.board.teamMap[Color.BLACK].push(chess.board.set(blackKnight, 0, 0));
-    expect(JSON.stringify(chess.generateMoveStrs(whitePawn, 0, 0))).toBe("[\"bxa8=Q\",\"bxa8=N\",\"bxa8=B\",\"bxa8=R\"]");
+    expect(JSON.stringify(chess.generateMoveStrs(whitePawn, 0, 0))).toBe("[\"bxa8=Q\",\"bxa8=N\"]");
 
     // disambiguation
     chess.board.wipe();
@@ -348,8 +348,7 @@ test('legal moves', () => {
         'Kc4', 'Ka4', 'Kc3', 'Ka3', 
         'Rxf3', 'Re3', 'Rd3', 'Rc3',
         'Ra3', 'Rb2', 'Rb1', 'exd6', 
-        'd8=Q', 'd8=R', 'd8=B', 'd8=N',
-        'f6', 'e6', 'g4'
+        'd8=Q', 'd8=N', 'f6', 'e6', 'g4'
     ];
 
     chess = new Chess('2N3B1/2pP1p2/3p4/4PPr1/1K6/1R3pP1/3p1p1k/8 w - - 0 1');
@@ -375,8 +374,7 @@ test('legal moves', () => {
         'Rxc3', 'Rg2', 'Rg1', 'Nxg4',
         'Nh3', 'Nd3', 'Nh1', 'Nd1',
         'exf5', 'bxc3', 'bxa3', 'c8=Q',
-        'c8=R', 'c8=B', 'c8=N', 'h7',
-        'e5', 'e3'
+        'c8=N', 'h7', 'e5', 'e3'
     ];
 
     chess = new Chess('n2R4/P1Pn4/1rB1NpKP/1pqQ1r1P/pB2PPp1/ppp3R1/1P1bPN1p/1bk5 w - - 0 1');
