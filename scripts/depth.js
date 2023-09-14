@@ -1,5 +1,5 @@
 const Chess = require('../lib/chess');
-const { nodeCount, memoizedNodes, miniMax, prunedNodes } = require('../lib/ai');
+const { data, miniMax } = require('../lib/ai');
 
 let depth;
 if (!process.argv[2]) {
@@ -13,9 +13,9 @@ let chess = new Chess();
 
 currentMoves = chess.legalMoves();
 console.log("best move: ", miniMax(chess, depth));
-console.log("nodes visited: ", nodeCount);
-console.log("nodes pruned: ", prunedNodes);
-console.log("nodes memoized: ", memoizedNodes);
+console.log("nodes visited: ", data.nodeCount);
+console.log("nodes pruned: ", data.prunedNodes);
+console.log("nodes memoized: ", data.memoizedNodes);
 
 /** NOTES
  *  
