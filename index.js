@@ -18,7 +18,7 @@ function playChess() {
     return new Promise(function() {
         let rl = readline.createInterface(process.stdin, process.stdout);
         rl.setPrompt(`${chess}\n> `);
-        rl.prompt()
+        rl.prompt();
 
         rl.on('line', function(line) {
             if (line === 'exit' || line === 'quit') {
