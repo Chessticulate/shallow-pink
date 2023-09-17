@@ -18,4 +18,17 @@ jobs:
               run: npm ci
             - name: Run Tests
               run: npm test
-
+    lint:
+        name: Run linter
+        runs-on: ubuntu-latest
+        steps:
+            - name: Clone Repo
+              uses: actions/checkout@v3
+            - name: Install Nodejs
+              uses: actions/setup-node@v3
+              with:
+                node-version: 16
+            - name: Install Dependencies
+              run: npm ci
+            - name: Run eslint
+              run: npx eslint index.js lib/

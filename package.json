@@ -4,6 +4,7 @@
   "description": "Chess engine implemented in Node.js",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint --fix index.js lib",
     "test": "jest",
     "debug": "node inspect $(npm bin)/jest --runInBand"
   },
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/bglaws/WebChess#readme",
   "devDependencies": {
+    "eslint": "^8.49.0",
     "jest": "^28.1.3"
   }
 }

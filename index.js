@@ -12,13 +12,13 @@ function playChess() {
     if (process.argv.includes('--ai-white')) {
         let move = chess.suggestMove(3);
         let result = chess.move(move);
-        console.log(`AI move: ${move}, result: ${result}`)
+        console.log(`AI move: ${move}, result: ${result}`);
     }
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function() {
         let rl = readline.createInterface(process.stdin, process.stdout);
         rl.setPrompt(`${chess}\n> `);
-        rl.prompt();
+        rl.prompt()
 
         rl.on('line', function(line) {
             if (line === 'exit' || line === 'quit') {
@@ -39,14 +39,14 @@ function playChess() {
                 if (process.argv.includes('--ai-black') || process.argv.includes('--ai-white')) {
                     let move = chess.suggestMove(3);
                     chess.move(move);
-                    console.log(`AI move: ${move}`)
+                    console.log(`AI move: ${move}`);
                 }
             }
 
             rl.setPrompt(`${chess}\n> `);
             rl.prompt();
         });
-    })
+    });
 }
 
 if (require.main === module) {
