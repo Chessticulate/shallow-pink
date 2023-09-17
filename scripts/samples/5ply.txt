@@ -1,0 +1,18 @@
+depth = 5
+moveMap before clear Map(2) { 'a3' => 0, 'a4' => 0 }
+best moves [
+  [ 'b3', 1 ],
+  [ 'c3', 1 ],
+  [ 'c4', 1 ],
+  [ 'e3', 1 ],
+  [ 'e4', 1 ],
+  [ 'g3', 1 ]
+]
+best move:  b3
+nodes visited:  109771
+nodes pruned:  18541
+nodes memoized:  30865
+
+real	3m57.466s
+user	3m12.313s
+sys	0m0.781s
