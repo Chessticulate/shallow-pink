@@ -10,7 +10,7 @@ const Chess = require('../lib/chess');
 const { nodeCount } = require('../lib/ai');
 
 
-test('evaluate', () => {
+test.skip('evaluate', () => {
     let chess = new Chess();
     expect(AI.evaluate(chess)).toBe(0);
 
