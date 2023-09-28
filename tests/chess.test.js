@@ -65,7 +65,7 @@ test('undo move', () => {
     chess.move('e5');
     chess.move('g4');
 
-    let hash = chess.board.stateHash();
+    let hash = chess.board.toFEN();
     let map = chess.states;
     let check = chess.check;
     let fen1 = chess.toFEN();
@@ -82,7 +82,7 @@ test('undo move', () => {
     expect(chess.prevMove).toBe('g4');
     expect(chess.fiftyMoveCounter).toBe(0);
     expect(chess.states).toBe(map);
-    expect(chess.board.stateHash()).toBe(hash);
+    expect(chess.board.toFEN()).toBe(hash);
 
     // instead of redoing d5, do Qh4 checkmate 
     let gameOver = chess.gameOver;
@@ -98,7 +98,7 @@ test('undo move', () => {
     expect(chess.prevMove).toBe('g4');
     expect(chess.fiftyMoveCounter).toBe(0);
     expect(chess.states).toBe(map);
-    expect(chess.board.stateHash()).toBe(hash);    
+    expect(chess.board.toFEN()).toBe(hash);    
 });
 
 test('record move', () => {
