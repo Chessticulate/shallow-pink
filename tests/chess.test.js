@@ -10,6 +10,7 @@ const Rook = require('../lib/pieces/rook');
 const Bishop = require('../lib/pieces/bishop');
 const Knight = require('../lib/pieces/knight');
 const Pawn = require('../lib/pieces/pawn');
+const {InvalidFENException} = require('../lib/errors');
 const AI = require('../lib/ai');
 const { CHECK } = require('../lib/status');
 
@@ -44,6 +45,17 @@ test('chess constructor', () => {
     let lateGame = new Chess('r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b - - 2 10');
 
     expect(lateGame.toFEN()).toBe('r1bq1bnr/1p1p1k1p/p3p1p1/5p2/2BQP3/1PN5/P1P2PPP/R1B1R1K1 b - - 2 10');
+
+    // FEN validation tests
+
+    // 9 spaces in the 4th rank
+    let badFen = "rnbqkbnr/pp1ppppp/8/2p5/9P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2";
+    expect(() => new Chess(badFen)).toThrow(InvalidFENException);
+    
+    // too many cooks (kings)
+    let badFen2 = "rnbqkbnr/pp1ppppp/8/2p5/9P3/8/PPPP1PPP/RNBQKKBNR w KQkq c6 0 2";
+    expect(() => new Chess(badFen2)).toThrow(InvalidFENException);
+
 });
 
 test('undo move', () => {
@@ -53,7 +65,7 @@ test('undo move', () => {
     chess.move('e5');
     chess.move('g4');
 
-    let hash = chess.board.stateHash();
+    let hash = chess.board.toFEN();
     let map = chess.states;
     let check = chess.check;
     let fen1 = chess.toFEN();
@@ -70,7 +82,7 @@ test('undo move', () => {
     expect(chess.prevMove).toBe('g4');
     expect(chess.fiftyMoveCounter).toBe(0);
     expect(chess.states).toBe(map);
-    expect(chess.board.stateHash()).toBe(hash);
+    expect(chess.board.toFEN()).toBe(hash);
 
     // instead of redoing d5, do Qh4 checkmate 
     let gameOver = chess.gameOver;
@@ -86,7 +98,7 @@ test('undo move', () => {
     expect(chess.prevMove).toBe('g4');
     expect(chess.fiftyMoveCounter).toBe(0);
     expect(chess.states).toBe(map);
-    expect(chess.board.stateHash()).toBe(hash);    
+    expect(chess.board.toFEN()).toBe(hash);    
 });
 
 test('record move', () => {
