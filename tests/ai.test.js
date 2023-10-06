@@ -15,10 +15,10 @@ test.skip('evaluate', () => {
     expect(AI.evaluate(chess)).toBe(0);
 
     chess = new Chess('3N4/1p4nq/2p5/Q3P2k/2B1b3/PR3R2/3KPP2/8 w - - 0 1');
-    expect(AI.evaluate(chess)).toBe(12);
+    expect(AI.evaluate(chess)).toBe(12.3);
 
     chess = new Chess('7r/4nkn1/p4P1P/1b1pRN2/7K/bPp5/6r1/8 w - - 0 1');
-    expect(AI.evaluate(chess)).toBe(-14);
+    expect(AI.evaluate(chess)).toBe(-13.8);
 });
 
 
