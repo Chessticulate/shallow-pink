@@ -27,7 +27,7 @@ test('board constructor', () => {
     board = new Board('8/2pK4/4P3/1pb3Pq/4N1k1/B7/8/8 w - - 0 1');
 
     expect(board.toFEN()).toEqual('8/2pK4/4P3/1pb3Pq/4N1k1/B7/8/8');
-    expect(board.castleState).toBe(undefined);
+    expect(board.castleState).toBe('-');
     expect(board.enPassant).toBe(undefined);
 });
 
