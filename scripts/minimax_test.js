@@ -16,7 +16,7 @@ function miniMaxTestGame(chess) {
     while(!chess.gameOver) {
         console.log(chess.toString());
         console.log(chess.toFEN());
-        // currentMoves chess.legalMoves();
+        // console.log(chess.legalMoves());
         // let move = currentMoves[Math.floor(Math.random() * currentMoves.length)];
         let move = miniMax(chess, depth);
         console.log(move, '->', chess.move(move));
