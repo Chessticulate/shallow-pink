@@ -17,6 +17,9 @@ test('board constructor', () => {
     expect(board.board[0].length).toBe(8);
     expect(board.history.length).toBe(0);
 
+    expect(board.keys.length).toBe(8)
+    expect(board.keys[0].length).toBe(8);
+
     expect(board.blackKing instanceof King).toBe(true);
     expect(board.blackKing.color).toBe(Color.BLACK);
 
