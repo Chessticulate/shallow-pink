@@ -1,9 +1,9 @@
 const Chess = require('../lib/chess');
-const { nodeCount, memoizedNodes, miniMax } = require('../lib/ai');
+const { data, miniMax } = require('../lib/ai');
 
 let depth;
 if (!process.argv[2]) {
-    depth = 2;
+    depth = 3;
 }
 else depth = process.argv[2];
  
@@ -16,6 +16,7 @@ function miniMaxTestGame(chess) {
     while(!chess.gameOver) {
         console.log(chess.toString());
         console.log(chess.toFEN());
+        console.log(chess.transpositionTable.size)
         // console.log(chess.legalMoves());
         // let move = currentMoves[Math.floor(Math.random() * currentMoves.length)];
         let move = miniMax(chess, depth);
