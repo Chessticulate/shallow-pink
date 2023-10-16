@@ -12,7 +12,6 @@ console.log('depth =', depth);
 let chess = new Chess();
 
 function miniMaxTestGame(chess) {
-    let currentMoves;
     while(!chess.gameOver) {
         console.log(chess.toString());
         console.log(chess.toFEN());
