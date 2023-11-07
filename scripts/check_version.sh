@@ -28,10 +28,10 @@ cd shallowpink_main
 MAIN_BRANCH_VERSION=$(get_version)
 
 # mini node script to compare versions
-NODE_COMPARE_VERS='const cv = require("compare-versions");\
-const out = cv.compareVersions(process.argv[1], process.argv[2]);\
+NODE_COMPARE_VERS='const cv = require("compare-versions");
+const out = cv.compareVersions(process.argv[1], process.argv[2]);
 process.exit(out < 0 ? 0 : 1)'
-npm install -g compare-versions
+npm install compare-versions
 node -e "$NODE_COMPARE_VERS" $MAIN_BRANCH_VERSION $THIS_BRANCH_VERSION
 
 EXIT_CODE=$?
