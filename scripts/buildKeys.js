@@ -35,33 +35,65 @@ function generateKeys() {
     const queenKeys = new PieceKeys();
     const kingKeys = new PieceKeys();
 
+    // turn keys
+    const white = BigInt(crypto.randomBytes(8).readUInt32LE(0)) + (BigInt(crypto.randomBytes(8).readUInt32LE(4)) << 32n);
+    const black = BigInt(crypto.randomBytes(8).readUInt32LE(0)) + (BigInt(crypto.randomBytes(8).readUInt32LE(4)) << 32n);
+
+    // castle keys
+    const kingSideW = BigInt(crypto.randomBytes(8).readUInt32LE(0)) + (BigInt(crypto.randomBytes(8).readUInt32LE(4)) << 32n);
+    const queenSideW = BigInt(crypto.randomBytes(8).readUInt32LE(0)) + (BigInt(crypto.randomBytes(8).readUInt32LE(4)) << 32n);
+    const kingSideB = BigInt(crypto.randomBytes(8).readUInt32LE(0)) + (BigInt(crypto.randomBytes(8).readUInt32LE(4)) << 32n);
+    const queenSideB = BigInt(crypto.randomBytes(8).readUInt32LE(0)) + (BigInt(crypto.randomBytes(8).readUInt32LE(4)) << 32n);
+
+    // en passant keys
+    const enPassantKeys = {};
+    for (let char = 'a'; char <= 'h'; char = String.fromCharCode(char.charCodeAt(0) + 1)) {
+        for (let i = 3; i <= 6; i+=3) {
+            let key = char + `${i}`;
+            let randomBytes = crypto.randomBytes(8); // Generate 8 random bytes (64 bits)
+            let randomValue = BigInt(randomBytes.readUInt32LE(0)) + (BigInt(randomBytes.readUInt32LE(4)) << 32n);
+            enPassantKeys[key] = randomValue.toString();
+        }
+    }
+
     // Convert BigInts to strings before saving to JSON
     const keys = {
         boardKeys,
+        enPassantKeys,
+        castleKeys: {
+            kingSideW: kingSideW.toString(),
+            queenSideW: queenSideW.toString(),
+            kingSideB: kingSideB.toString(),
+            queenSideB: queenSideB.toString()
+        },
+        turnKeys: {
+            white: white.toString(),
+            black: black.toString()
+        },
         pawnKeys: {
             whiteKey: pawnKeys.whiteKey.toString(),
-            blackKey: pawnKeys.blackKey.toString(),
+            blackKey: pawnKeys.blackKey.toString()
         },
         knightKeys: {
             whiteKey: knightKeys.whiteKey.toString(),
-            blackKey: knightKeys.blackKey.toString(),
+            blackKey: knightKeys.blackKey.toString()
         },
         bishopKeys: {
             whiteKey: bishopKeys.whiteKey.toString(),
-            blackKey: bishopKeys.blackKey.toString(),
+            blackKey: bishopKeys.blackKey.toString()
         },
         rookKeys: {
             whiteKey: rookKeys.whiteKey.toString(),
-            blackKey: rookKeys.blackKey.toString(),
+            blackKey: rookKeys.blackKey.toString()
         },
         queenKeys: {
             whiteKey: queenKeys.whiteKey.toString(),
-            blackKey: queenKeys.blackKey.toString(),
+            blackKey: queenKeys.blackKey.toString()
         },
         kingKeys: {
             whiteKey: kingKeys.whiteKey.toString(),
-            blackKey: kingKeys.blackKey.toString(),
-        },
+            blackKey: kingKeys.blackKey.toString()
+        }
     };
 
     fs.writeFileSync('keys.json', JSON.stringify(keys));
