@@ -32,3 +32,15 @@ jobs:
               run: npm ci
             - name: Run eslint
               run: npx eslint index.js lib/
+    check-version:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Clone Repo
+              uses: actions/checkout@v3
+            - name: Install Nodejs
+              uses: actions/setup-node@v3
+              with:
+                node-version: 16
+            - name: Check Version Increment
+              run: scripts/check_version.sh
+
