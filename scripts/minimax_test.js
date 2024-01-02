@@ -17,7 +17,7 @@ function miniMaxTestGame(chess) {
         console.log(chess.toFEN());
         console.log('table size: ', chess.transpositionTable.size);
         console.log('successful table searches: ', data.tptNodes);
-        console.log('key: ', chess.key);
+        // console.log('key: ', chess.key);
         // console.log(chess.legalMoves());
         // let move = currentMoves[Math.floor(Math.random() * currentMoves.length)];
         let move = miniMax(chess, depth);

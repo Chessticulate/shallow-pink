@@ -10,6 +10,9 @@ function playChess() {
     const chess = new Chess();
 
     if (process.argv.includes('--ai-white')) {
+        // flip board isnt working currently
+        // but if AI is white, board should be from blacks perspective
+        // chess.board.flipPerspective();
         let move = chess.suggestMove(3);
         let result = chess.move(move);
         console.log(`AI move: ${move}, result: ${result}`);
@@ -38,6 +41,7 @@ function playChess() {
             if (result === Chess.Status.MOVEOK || result === Chess.Status.CHECK) {
                 if (process.argv.includes('--ai-black') || process.argv.includes('--ai-white')) {
                     let move = chess.suggestMove(3);
+
                     chess.move(move);
                     console.log(`AI move: ${move}`);
                 }

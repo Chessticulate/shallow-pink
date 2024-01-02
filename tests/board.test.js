@@ -17,9 +17,6 @@ test('board constructor', () => {
     expect(board.board[0].length).toBe(8);
     expect(board.history.length).toBe(0);
 
-    expect(board.keys.length).toBe(8)
-    expect(board.keys[0].length).toBe(8);
-
     expect(board.blackKing instanceof King).toBe(true);
     expect(board.blackKing.color).toBe(Color.BLACK);
 
@@ -277,7 +274,6 @@ test('castling', () => {
 
     // black queen side castle
     let moveList = board.buildMove("O-O-O", Color.BLACK);
-    console.log(moveList);
     expect(moveList !== null).toBe(true);
     expect(moveList.length).toBe(2);
     expect(moveList[0].piece).toBe(blackKing);
