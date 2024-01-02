@@ -11,7 +11,7 @@ Chess library written in Node.js for the chessticulate website.
 2. install packages: `npm install`
 
 ## Development tools
-- Run linter: `npx eslint`
+- Run linter: `npm run lint`
 - Run tests: `npm test`
 
 ## CI
