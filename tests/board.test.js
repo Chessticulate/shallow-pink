@@ -733,6 +733,30 @@ test("check promotion", () => {
     expect(board.teamMap[Color.WHITE].find(piece => piece === whiteKnight)).toBe(undefined);
 
     expect(board.checkForCheck(Color.BLACK)).toBe(false);
+
+    // capture + promotion test
+
+    board = new Board();
+    whiteKing = new King(Color.WHITE, 0, 7);
+    whitePawn = new Pawn(Color.WHITE, 1, 1);
+    blackKing = new King(Color.BLACK, 1, 1);
+    let blackQ = new Queen(Color.BLACK, 0, 0);
+
+    board.wipe();
+
+    board.whiteKing = whiteKing;
+    board.blackKing = blackKing;
+
+    board.teamMap[Color.WHITE] = [
+        board.set(0, 7, whiteKing),
+        board.set(1, 1, whitePawn)
+    ];
+    board.teamMap[Color.BLACK] = [
+        board.set(1, 1, blackKing),
+        board.set(0, 0, blackQ)
+    ];
+
+    moveList = board.buildMove('bxa8=R', Color.WHITE);
 });
 
 test('toFEN', () => {

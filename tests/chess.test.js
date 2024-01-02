@@ -398,6 +398,44 @@ test('legal moves', () => {
     moveSet.forEach(move => {
         expect(exampleSet2.includes(move)).toBe(true);
     });
+
+    // testing that legal moves returns castling moves
+
+    // kings side castle position
+    chess = new Chess('rnbqk2r/pp1p1ppp/3bpn2/2p5/2B1P3/P4N2/1PPP1PPP/RNBQK2R w KQkq - 0 1');
+    moveSet = chess.legalMoves();
+
+    expect(moveSet.includes('O-O')).toBe(true);
+
+    // same position but with blacks turn to move
+    chess = new Chess('rnbqk2r/pp1p1ppp/3bpn2/2p5/2B1P3/P4N2/1PPP1PPP/RNBQK2R b KQkq - 0 1');
+    moveSet = chess.legalMoves();
+
+    expect(moveSet.includes('O-O')).toBe(true);
+
+    // Queens side castle position
+    chess = new Chess('r3kbnr/pbpp1ppp/1pn1pq2/8/6Q1/1PN1P3/PBPP1PPP/R3KBNR w KQkq - 0 1');
+    moveSet = chess.legalMoves();
+
+    expect(moveSet.includes('O-O-O')).toBe(true);
+
+    // same position but its blacks turn
+    chess = new Chess('r3kbnr/pbpp1ppp/1pn1pq2/8/6Q1/1PN1P3/PBPP1PPP/R3KBNR b KQkq - 0 1');
+    moveSet = chess.legalMoves();
+
+    expect(moveSet.includes('O-O-O')).toBe(true);
+
+    // both sides
+    chess = new Chess('r3k2r/pbppbppp/1pn1pq1n/8/6Q1/1PN1PN2/PBPPBPPP/R3K2R w KQkq - 0 1');
+    moveSet = chess.legalMoves();
+
+    expect(moveSet.includes('O-O', 'O-O-O')).toBe(true);
+
+    // blacks turn 
+    chess = new Chess('r3k2r/pbppbppp/1pn1pq1n/8/6Q1/1PN1PN2/PBPPBPPP/R3K2R b KQkq - 0 1');
+    moveSet = chess.legalMoves();
+
+    expect(moveSet.includes('O-O', 'O-O-O')).toBe(true);
 });
 
 
