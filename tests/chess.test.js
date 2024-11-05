@@ -406,6 +406,10 @@ test('legal moves', () => {
     moveSet = chess.legalMoves();
 
     expect(moveSet.includes('O-O')).toBe(true);
+    
+    let king = chess.board.get(4, 7);
+    moveSet = chess.legalMoves(king)
+    expect(moveSet.includes('O-O')).toBe(true);
 
     // same position but with blacks turn to move
     chess = new Chess('rnbqk2r/pp1p1ppp/3bpn2/2p5/2B1P3/P4N2/1PPP1PPP/RNBQK2R b KQkq - 0 1');
@@ -436,6 +440,13 @@ test('legal moves', () => {
     moveSet = chess.legalMoves();
 
     expect(moveSet.includes('O-O', 'O-O-O')).toBe(true);
+
+    // test individual piece move set
+    chess = new Chess();
+    let knight = chess.board.get(6, 7);
+    moveSet = chess.legalMoves(knight);
+    expect(moveSet.includes('Nf3', 'Nh3')).toBe(true);
+
 });
 
 
