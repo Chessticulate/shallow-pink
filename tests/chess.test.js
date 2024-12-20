@@ -447,6 +447,13 @@ test('legal moves', () => {
     moveSet = chess.legalMoves(knight);
     expect(moveSet.includes('Nf3', 'Nh3')).toBe(true);
 
+    let whitePawnA = chess.board.get(0, 6);
+    moveSet = chess.legalMoves(whitePawnA);
+    expect(moveSet.includes('a3', 'a4'));
+
+    chess.move('a4');
+    moveSet = chess.legalMoves(whitePawnA);
+    expect(moveSet.length).toBe(0);
 });
 
 
