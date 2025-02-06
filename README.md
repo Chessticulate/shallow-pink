@@ -1,5 +1,5 @@
 # ShallowPink
-Chess library written in Node.js for the chessticulate website.
+Chess library written in JavaScript for the chessticulate website.
 
 ## Features
 - Fully implemented chess engine with board and piece representation, move validation, and gamestate tracking
