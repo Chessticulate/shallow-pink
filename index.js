@@ -6,9 +6,9 @@ module.exports = Chess;
 let readline;
 
 try {
-  readline = require('readline');
+    readline = require('readline');
 } catch (error) {
-  console.warn("failed to import readline -- you must be using this in a browser?")
+    console.warn('failed to import readline -- you must be using this in a browser?');
 }
 
 
