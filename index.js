@@ -1,6 +1,6 @@
 'use strict';
-
 const Chess = require('./lib/chess');
+const { runUci } = require('./scripts/uci.js');
 module.exports = Chess;
 
 let readline;
@@ -11,6 +11,13 @@ try {
     console.warn('failed to import readline -- you must be using this in a browser?');
 }
 
+if (require.main === module) {
+    if (process.argv.includes('-uci')) {
+        runUci();
+    } else {
+        playChess(); 
+    }
+}
 
 function playChess() {
     const chess = new Chess();
@@ -57,8 +64,4 @@ function playChess() {
             rl.prompt();
         });
     });
-}
-
-if (require.main === module) {
-    playChess();
 }
