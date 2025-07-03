@@ -43,4 +43,43 @@ jobs:
                 node-version: 16
             - name: Check Version Increment
               run: scripts/check_version.sh
+    play-games:
+        # only run on main
+        if: github.ref == 'refs/heads/main'
+        name: Run games
+        runs-on: ubuntu-latest
+        steps:
+            - name: Clone Repo
+              uses: actions/checkout@v3
+            
+            - name: Set up Node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+            - name: Install engine dependencies
+              run: npm ci
 
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: '3.11'
+
+            - name: Clone lichess-bot
+              run: |
+                  git clone https://github.com/Bglaws/lichess-bot.git --depth=1
+
+            - name: Install lichess-bot dependencies
+              run: |
+                  cd lichess-bot
+                  pip install -r requirements.txt
+
+            - name: Copy custom config
+              run: |
+                  sed "s|TOKEN_PLACEHOLDER|${{ secrets.LICHESS_TOKEN }}|" .github/lichess-config.yml > lichess-bot/config.yml
+
+            - name: Run lichess-bot
+              run: |
+                  cd lichess-bot
+                  echo $PWD
+                  python3 lichess-bot.py
+            
