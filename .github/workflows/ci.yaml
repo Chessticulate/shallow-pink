@@ -81,5 +81,6 @@ jobs:
               run: |
                   cd lichess-bot
                   echo $PWD
-                  python3 lichess-bot.py
+              # NOT RUNNING BOT UNTIL AI IMPROVEMENTS
+              #    python3 lichess-bot.py
             
