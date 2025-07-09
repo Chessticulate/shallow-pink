@@ -3,11 +3,25 @@ const Chess = require('./lib/chess');
 module.exports = Chess;
 
 let readline;
+let runUci;
 
 try {
     readline = require('readline');
+    runUci = require('./scripts/uci.js').runUci;
 } catch (error) {
     console.warn('failed to import readline -- you must be using this in a browser?');
+}
+
+if (require.main === module) {
+    if (process.argv.includes('-uci')) {
+        if (runUci) {
+            runUci();
+        } else {
+            console.warn('failed to import uci -- you must be using this in a browser?');
+        }
+    } else {
+        playChess(); 
+    }
 }
 
 
@@ -57,6 +71,3 @@ function playChess() {
     });
 }
 
-if (require.main === module) {
-    playChess(); 
-}
