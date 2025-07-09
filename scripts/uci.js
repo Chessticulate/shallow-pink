@@ -143,3 +143,6 @@ function sanToUci(sanMove) {
 
 module.exports = { runUci };
 
+if (require.main === module) {
+    runUci();
+}
