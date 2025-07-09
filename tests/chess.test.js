@@ -454,6 +454,11 @@ test('legal moves', () => {
     chess.move('a4');
     moveSet = chess.legalMoves(whitePawnA);
     expect(moveSet.length).toBe(0);
+
+    // test castling not legal while in check
+    chess = new Chess('rnbqk2r/ppp2ppp/7n/3pp3/4P3/b1PQ4/PP1P1PPP/RNB1KBNR w KQkq d6 0 5');
+    chess.move('Qb5');
+    expect(chess.legalMoves().includes('O-O')).toBe(false);  
 });
 
 
