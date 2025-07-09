@@ -1,6 +1,5 @@
 'use strict';
 const Chess = require('./lib/chess');
-const { runUci } = require('./scripts/uci.js');
 module.exports = Chess;
 
 let readline;
@@ -11,21 +10,13 @@ try {
     console.warn('failed to import readline -- you must be using this in a browser?');
 }
 
-if (require.main === module) {
-    if (process.argv.includes('-uci')) {
-        runUci();
-    } else {
-        playChess(); 
-    }
-}
 
 function playChess() {
     const chess = new Chess();
 
     if (process.argv.includes('--ai-white')) {
-        // flip board isnt working currently
-        // but if AI is white, board should be from blacks perspective
-        // chess.board.flipPerspective();
+        // if AI is white, board should be from blacks perspective
+        chess.board.flipPerspective();
         let move = chess.suggestMove(3);
         let result = chess.move(move);
         console.log(`AI move: ${move}, result: ${result}`);
@@ -64,4 +55,8 @@ function playChess() {
             rl.prompt();
         });
     });
+}
+
+if (require.main === module) {
+    playChess(); 
 }
