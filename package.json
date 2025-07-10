@@ -10,15 +10,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bglaws/WebChess.git"
+    "url": "git+https://github.com/Chessticulate/shallow-pink.git"
   },
   "keywords": [],
   "author": "Brian and Kyle Glaws",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bglaws/WebChess/issues"
+    "url": "https://github.com/Chessticulate/shallow-pink/issues"
   },
-  "homepage": "https://github.com/bglaws/WebChess#readme",
+  "bin": {
+    "mycli": "./index.js"
+  },
+  "homepage": "https://github.com/Chessticulate/shallow-pink#readme",
   "devDependencies": {
     "eslint": "^8.49.0",
     "jest": "^28.1.3"

@@ -1,4 +1,6 @@
+#!/usr/bin/env node
 'use strict';
+
 const Chess = require('./lib/chess');
 module.exports = Chess;
 
