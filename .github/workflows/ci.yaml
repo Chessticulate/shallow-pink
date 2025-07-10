@@ -83,4 +83,15 @@ jobs:
                   echo $PWD
               # NOT RUNNING BOT UNTIL AI IMPROVEMENTS
               #    python3 lichess-bot.py
-            
+
+    trigger-fe-rebuild:
+        if: github.ref == 'refs/heads/main'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Trigger fe rebuild
+              run: |
+                  curl -X POST \
+                    -H "Accept: application/vnd.github+json" \
+                    -H "Authorization: Bearer ${{ secrets.ENGINE_UPDATE }}" \
+                    https://api.github.com/repos/Chessticulate/chessticulate-fe/dispatches \
+                    -d '{"event_type":"engine-update", "client_playload": { "branch": "main"} }'
