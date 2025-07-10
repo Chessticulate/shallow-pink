@@ -94,4 +94,4 @@ jobs:
                     -H "Accept: application/vnd.github+json" \
                     -H "Authorization: Bearer ${{ secrets.ENGINE_UPDATE }}" \
                     https://api.github.com/repos/Chessticulate/chessticulate-fe/dispatches \
-                    -d '{"event_type":"engine-update", "client_playload": { "branch": "main"} }'
+                    -d '{"event_type":"engine-update", "client_payload": { "branch": "main"} }'
