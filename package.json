@@ -1,6 +1,6 @@
 {
   "name": "shallowpink",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Chess engine implemented in Node.js",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "url": "https://github.com/Chessticulate/shallow-pink/issues"
   },
   "bin": {
-    "mycli": "./index.js"
+    "shallowpink": "./index.js"
   },
   "homepage": "https://github.com/Chessticulate/shallow-pink#readme",
   "devDependencies": {
