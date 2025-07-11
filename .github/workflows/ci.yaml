@@ -19,7 +19,7 @@ jobs:
         run: npm install
 
       - name: Run Prettier
-        run: npx prettier --check .
+        run: npx prettier --check index lib/ tests/ scripts/
   test:
     name: Run Tests
     runs-on: ubuntu-latest

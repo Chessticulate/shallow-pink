@@ -4,7 +4,7 @@ module.exports = {
         'commonjs': true,
         'es2021': true
     },
-    'extends': 'eslint:recommended',
+    'extends': ['eslint:recommended', 'prettier'],
     'overrides': [
         {
             'env': {
@@ -32,7 +32,7 @@ module.exports = {
         ],
         'quotes': [
             'error',
-            'single'
+            'double'
         ],
         'semi': [
             'error',

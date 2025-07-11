@@ -3,7 +3,7 @@ const { data, miniMax } = require("../lib/ai");
 
 let depth;
 if (!process.argv[2]) {
-  depth = 3;
+    depth = 3;
 } else depth = process.argv[2];
 
 console.log("depth =", depth);
