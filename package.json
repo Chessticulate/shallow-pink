@@ -1,6 +1,6 @@
 {
   "name": "shallowpink",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Chess engine implemented in Node.js",
   "main": "index.js",
   "scripts": {
