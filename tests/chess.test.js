@@ -380,11 +380,11 @@ test('legal moves', () => {
         'Nd4', 'Bxa8', 'Bxd7', 'Bb7', 
         'Bxb5', 'Qxd7', 'Qd6', 'Qxf5',
         'Qe5', 'Qxc5', 'Qd4', 'Qc4',
-        'Qd3', 'Qxb3', 'Qxd2', 'Bxc5',
+        'Qd3', 'Qxb3', 'Qxd2+', 'Bxc5',
         'Ba5', 'Bxc3', 'Bxa3', 'Rxg4',
         'Rh3', 'Rf3', 'Re3', 'Rd3',
-        'Rxc3', 'Rg2', 'Rg1', 'Nxg4',
-        'Nh3', 'Nd3', 'Nh1', 'Nd1',
+        'Rxc3+', 'Rg2', 'Rg1+', 'Nxg4',
+        'Nh3', 'Nd3+', 'Nh1', 'Nd1',
         'exf5', 'bxc3', 'bxa3', 'c8=Q',
         'c8=N', 'h7', 'e5', 'e3'
     ];
@@ -459,6 +459,10 @@ test('legal moves', () => {
     chess = new Chess('rnbqk2r/ppp2ppp/7n/3pp3/4P3/b1PQ4/PP1P1PPP/RNB1KBNR w KQkq d6 0 5');
     chess.move('Qb5');
     expect(chess.legalMoves().includes('O-O')).toBe(false);  
+
+    // test castling includes suffix (+ and #)
+    chess = new Chess('rnbq1bnr/p1pppkp1/p6p/8/4P3/7N/PPPP2PP/RNBQK2R w KQ - 0 6');
+    expect(chess.legalMoves().includes('O-O+')).toBe(true);
 });
 
 
