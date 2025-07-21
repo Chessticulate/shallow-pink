@@ -275,7 +275,7 @@ test('generateMoveStrs', () => {
 
     let i = 1;
     ["d4", "Nc6", "d5", "e5"].forEach(move => {
-        chess.board.move(chess.board.buildMove(move, (i % 2 ? Color.WHITE : Color.BLACK)));
+        chess.board.move(chess.board.buildMove(move, (i % 2 ? Color.WHITE : Color.BLACK))[0]);
         i++;
     });
     let pawnDWhite = chess.board.get(3, 3);
