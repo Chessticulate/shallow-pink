@@ -273,7 +273,7 @@ test('castling', () => {
     ];
 
     // black queen side castle
-    let moveList = board.buildMove("O-O-O", Color.BLACK);
+    let moveList = board.buildMove("O-O-O", Color.BLACK)[0];
     expect(moveList !== null).toBe(true);
     expect(moveList.length).toBe(2);
     expect(moveList[0].piece).toBe(blackKing);
@@ -323,7 +323,7 @@ test('castling', () => {
     expect(blackKing.y).toBe(0);
 
     // white king side castle
-    moveList = board.buildMove("O-O", Color.WHITE);
+    moveList = board.buildMove("O-O", Color.WHITE)[0];
     expect(moveList !== null).toBe(true);
     expect(moveList.length).toBe(2);
     expect(moveList[0].piece).toBe(whiteKing);
@@ -385,7 +385,7 @@ test('basic movement', () => {
 
     // build black pawn move
     let blackPawnA = board.get(0, 1);
-    let moveList = board.buildMove("a5", Color.BLACK);
+    let moveList = board.buildMove("a5", Color.BLACK)[0];
     expect(moveList !== null).toBe(true);
     expect(moveList.length).toBe(1);
     expect(moveList[0].piece).toBe(blackPawnA);
@@ -418,7 +418,7 @@ test('basic movement', () => {
 
     // build white knight move
     let whiteKnightQ = board.get(1, 7);
-    moveList = board.buildMove("Na3", Color.WHITE);
+    moveList = board.buildMove("Na3", Color.WHITE)[0];
     expect(moveList !== null).toBe(true);
     expect(moveList.length).toBe(1);
     expect(moveList[0].piece).toBe(whiteKnightQ);
@@ -457,11 +457,12 @@ test('basic capturing', () => {
     // assume non-capture moves are working fine
     let whitePawnD = board.get(3, 6);
     let blackPawnE = board.get(4, 1);
-    board.move(board.buildMove("d4", Color.WHITE));
-    board.move(board.buildMove("e5", Color.BLACK));
+    
+    board.move(board.buildMove("d4", Color.WHITE)[0]);
+    board.move(board.buildMove("e5", Color.BLACK)[0]);
 
     // build white pawn d capture black pawn e
-    moveList = board.buildMove("dxe5", Color.WHITE);
+    moveList = board.buildMove("dxe5", Color.WHITE)[0];
     expect(moveList === null).toBe(false);
     expect(moveList.length).toBe(2);
     expect(moveList[0].piece).toBe(blackPawnE);
@@ -495,13 +496,13 @@ test('basic capturing', () => {
     expect(board.teamMap[Color.BLACK].find(piece => piece === blackPawnE)).toBe(blackPawnE);
 
     // redo move and continue
-    board.move(board.buildMove("dxe5", Color.WHITE));
+    board.move(board.buildMove("dxe5", Color.WHITE)[0]);
 
     // build bishop capturing queen
     let whiteBishopQ = board.get(2, 7);
     let blackQueen = board.get(3, 0);
-    board.move(board.buildMove("Qg5", Color.BLACK));
-    moveList = board.buildMove("Bxg5", Color.WHITE);
+    board.move(board.buildMove("Qg5", Color.BLACK)[0]);
+    moveList = board.buildMove("Bxg5", Color.WHITE)[0];
     expect(moveList === null).toBe(false);
     expect(moveList[0].piece).toBe(blackQueen);
     expect(moveList[0].destX).toBe(-1);
@@ -539,11 +540,11 @@ test("en passant", () => {
     let pawnWhiteD = board.get(3, 6);
     let pawnBlackE = board.get(4, 1);
 
-    board.move(board.buildMove("d4", Color.WHITE));
+    board.move(board.buildMove("d4", Color.WHITE)[0]);
     expect(pawnBlackE.enPassantable).toBe(false);
     expect(pawnWhiteD.enPassantable).toBe(true);
 
-    board.move(board.buildMove("e6", Color.BLACK));
+    board.move(board.buildMove("e6", Color.BLACK)[0]);
     expect(pawnBlackE.enPassantable).toBe(false);
     expect(pawnWhiteD.enPassantable).toBe(false);
 
@@ -551,7 +552,7 @@ test("en passant", () => {
     expect(pawnBlackE.enPassantable).toBe(false);
     expect(pawnWhiteD.enPassantable).toBe(true);
 
-    board.move(board.buildMove("e5", Color.BLACK));
+    board.move(board.buildMove("e5", Color.BLACK)[0]);
     expect(pawnBlackE.enPassantable).toBe(true);
     expect(pawnWhiteD.enPassantable).toBe(false);
 
@@ -559,11 +560,11 @@ test("en passant", () => {
     expect(pawnBlackE.enPassantable).toBe(false);
     expect(pawnWhiteD.enPassantable).toBe(true);
 
-    board.move(board.buildMove("a6", Color.BLACK));
-    board.move(board.buildMove("d5", Color.WHITE));
-    board.move(board.buildMove("e5", Color.BLACK));
+    board.move(board.buildMove("a6", Color.BLACK)[0]);
+    board.move(board.buildMove("d5", Color.WHITE)[0]);
+    board.move(board.buildMove("e5", Color.BLACK)[0]);
 
-    let moveList = board.buildMove("dxe6", Color.WHITE);
+    let moveList = board.buildMove("dxe6", Color.WHITE)[0];
     expect(moveList === null).toBe(false);
     expect(moveList.length).toBe(2);
     expect(moveList[0].piece).toBe(pawnBlackE);
@@ -614,7 +615,7 @@ test("standard promotion", () => {
 
     expect(board.buildMove("d8", Color.WHITE)).toBe(null);
 
-    let moveList = board.buildMove("d8=R", Color.WHITE);
+    let moveList = board.buildMove("d8=R", Color.WHITE)[0];
     expect(moveList === null).toBe(false);
     expect(moveList[0].piece).toBe(whitePawn);
     expect(moveList[0].destX).toBe(-1);
@@ -661,7 +662,7 @@ test("capture promotion", () => {
 
     expect(board.buildMove("dxe8", Color.WHITE)).toBe(null);
 
-    let moveList = board.buildMove("dxe8=Q", Color.WHITE);
+    let moveList = board.buildMove("dxe8=Q", Color.WHITE)[0];
     expect(moveList === null).toBe(false);
     expect(moveList[0].piece).toBe(blackPawn);
     expect(moveList[0].destX).toBe(-1);
@@ -710,7 +711,7 @@ test("check promotion", () => {
 
     expect(board.buildMove("d8", Color.WHITE)).toBe(null);
 
-    let moveList = board.buildMove("d8=N", Color.WHITE);
+    let moveList = board.buildMove("d8=N", Color.WHITE)[0];
     expect(moveList === null).toBe(false);
     expect(moveList[0].piece).toBe(whitePawn);
     expect(moveList[0].destX).toBe(-1);
@@ -756,7 +757,7 @@ test("check promotion", () => {
         board.set(0, 0, blackQ)
     ];
 
-    moveList = board.buildMove('bxa8=R', Color.WHITE);
+    moveList = board.buildMove('bxa8=R', Color.WHITE)[0];
 });
 
 test('toFEN', () => {
