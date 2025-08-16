@@ -1,13 +1,7 @@
 const Color = require('../lib/color');
-const Board = require('../lib/board');
-const Pawn = require('../lib/pieces/pawn');
-const Queen = require('../lib/pieces/queen');
-const King = require('../lib/pieces/king');
-const Knight = require('../lib/pieces/knight');
 
 const AI = require('../lib/ai');
 const Chess = require('../lib/chess');
-const { nodeCount } = require('../lib/ai');
 
 
 test('evaluate', () => {

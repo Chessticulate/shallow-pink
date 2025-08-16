@@ -15,7 +15,7 @@ currentMoves = chess.legalMoves();
 console.log("best move: ", miniMax(chess, depth));
 console.log("nodes visited: ", data.nodeCount);
 console.log("nodes pruned: ", data.prunedNodes);
-console.log("nodes memoized: ", data.memoizedNodes);
+console.log("nodes memoized: ", data.tptNodes);
 
 /** NOTES
  *  

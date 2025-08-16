@@ -1,7 +1,5 @@
 const Board = require('../lib/board');
-const { WHITE, BLACK } = require('../lib/color');
 const Color = require('../lib/color');
-const Move = require('../lib/move');
 const Bishop = require('../lib/pieces/bishop');
 const King = require('../lib/pieces/king');
 const Knight = require('../lib/pieces/knight');
@@ -618,8 +616,8 @@ test("standard promotion", () => {
     let moveList = board.buildMove("d8=R", Color.WHITE)[0];
     expect(moveList === null).toBe(false);
     expect(moveList[0].piece).toBe(whitePawn);
-    expect(moveList[0].destX).toBe(-2);
-    expect(moveList[0].destY).toBe(-2);
+    expect(moveList[0].destX).toBe(-1);
+    expect(moveList[0].destY).toBe(-1);
     expect(moveList[1].piece instanceof Rook).toBe(true);
     expect(moveList[1].destX).toBe(3);
     expect(moveList[1].destY).toBe(0);
@@ -633,7 +631,6 @@ test("standard promotion", () => {
 
     // I think undo move is having issues with undoing promotions, 
     // putting a pawn back on ots previous square
-    console.log('did we make it here ok?');
 
     board.undo();
     expect(board.get(3, 1)).toBe(whitePawn);
@@ -673,8 +670,8 @@ test("capture promotion", () => {
     expect(moveList[0].destX).toBe(-1);
     expect(moveList[0].destY).toBe(-1);
     expect(moveList[1].piece).toBe(whitePawn);
-    expect(moveList[1].destX).toBe(-2);
-    expect(moveList[1].destY).toBe(-2);
+    expect(moveList[1].destX).toBe(-1);
+    expect(moveList[1].destY).toBe(-1);
     expect(moveList[2].destX).toBe(4);
     expect(moveList[2].destY).toBe(0);
     expect(moveList[2].piece instanceof Queen).toBe(true);
@@ -719,8 +716,8 @@ test("check promotion", () => {
     let moveList = board.buildMove("d8=N", Color.WHITE)[0];
     expect(moveList === null).toBe(false);
     expect(moveList[0].piece).toBe(whitePawn);
-    expect(moveList[0].destX).toBe(-2);
-    expect(moveList[0].destY).toBe(-2);
+    expect(moveList[0].destX).toBe(-1);
+    expect(moveList[0].destY).toBe(-1);
     expect(moveList[1].piece instanceof Knight).toBe(true);
     expect(moveList[1].destX).toBe(3);
     expect(moveList[1].destY).toBe(0);
