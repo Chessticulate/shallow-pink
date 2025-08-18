@@ -2,5 +2,5 @@
 
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 echo "Engine root: $DIR"
-node "$DIR/scripts/uci.js"
+node "$DIR/lib/uci.js"
 
