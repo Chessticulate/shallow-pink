@@ -3,8 +3,17 @@
 # record start time in seconds with nanoseconds
 start=$(date +%s.%N)
 
+if [ $# -gt 1 ]; then
+    echo "too many args"
+    exit 1
+fi
+
 # run your node script, capture its output
-output=$(node ./depth.js 3)
+if [ $# -lt 1 ]; then
+    output=$(node ./depth.js 3)
+else 
+    output=$(node ./depth.js $1)
+fi
 
 # record end time
 end=$(date +%s.%N)
