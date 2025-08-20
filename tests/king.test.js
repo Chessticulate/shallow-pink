@@ -1,7 +1,6 @@
 const Color = require('../lib/color');
 const King = require('../lib/pieces/king');
 const Board = require('../lib/board');
-const Pawn = require('../lib/pieces/pawn');
 const Rook = require('../lib/pieces/rook')
 
 test('test king constructor', () => {

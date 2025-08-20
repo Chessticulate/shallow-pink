@@ -1,7 +1,5 @@
 const Board = require('../lib/board');
-const { WHITE, BLACK } = require('../lib/color');
 const Color = require('../lib/color');
-const Move = require('../lib/move');
 const Bishop = require('../lib/pieces/bishop');
 const King = require('../lib/pieces/king');
 const Knight = require('../lib/pieces/knight');
@@ -629,6 +627,10 @@ test("standard promotion", () => {
     expect(whiteRook instanceof Rook).toBe(true);
     expect(board.teamMap[Color.WHITE].find(piece => piece === whitePawn)).toBe(undefined);
     expect(board.teamMap[Color.WHITE].find(piece => piece === whiteRook)).toBe(whiteRook);
+    
+
+    // I think undo move is having issues with undoing promotions, 
+    // putting a pawn back on ots previous square
 
     board.undo();
     expect(board.get(3, 1)).toBe(whitePawn);

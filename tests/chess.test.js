@@ -6,13 +6,9 @@ const Color = require('../lib/color');
 const Status = require('../lib/status');
 const King = require('../lib/pieces/king');
 const Queen = require('../lib/pieces/queen');
-const Rook = require('../lib/pieces/rook');
-const Bishop = require('../lib/pieces/bishop');
 const Knight = require('../lib/pieces/knight');
 const Pawn = require('../lib/pieces/pawn');
 const {InvalidFENException} = require('../lib/errors');
-const AI = require('../lib/ai');
-const { CHECK } = require('../lib/status');
 
 test('chess constructor', () => {
     let chess = new Chess();

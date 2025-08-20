@@ -20,7 +20,7 @@ function playChess() {
         chess.board.flipPerspective();
         let move = chess.suggestMove(3);
         let result = chess.move(move);
-        console.log(`AI move: ${move}, result: ${result}`);
+        console.log(`result: ${result}`);
     }
 
     return new Promise(function() {
@@ -48,7 +48,6 @@ function playChess() {
                     let move = chess.suggestMove(3);
 
                     chess.move(move);
-                    console.log(`AI move: ${move}`);
                 }
             }
 
