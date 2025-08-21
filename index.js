@@ -5,17 +5,60 @@ const Chess = require('./lib/chess');
 module.exports = Chess;
 
 let readline;
+let fs;
 
 try {
     readline = require('readline');
+    fs = require('fs');
 } catch (error) {
     console.warn('failed to import readline -- you must be using this in a browser?');
 }
 
-function playChess() {
-    const chess = new Chess();
 
-    if (process.argv.includes('--ai-white')) {
+function parseArgs() {
+    const args = process.argv.slice(2);
+    let bookPath = null;
+    let aiWhite = false;
+    let aiBlack = false;
+
+    for (let i = 0; i < args.length; i++) {
+        const a = args[i];
+
+        if (a === '--ai-white') aiWhite = true;
+        else if (a === '--ai-black') aiBlack = true;
+        else if (a === '--book') {
+            const next = args[i + 1];
+            if (!next || next.startsWith('-')) {
+                console.error('Error: --book needs a path (e.g. "--book ./file.bin").');
+                process.exit(1);
+            }
+            bookPath = next;
+            i++; // skip value
+        }
+    }
+
+    return { bookPath, aiWhite, aiBlack };
+}
+
+
+function playChess() {
+    const { bookPath, aiWhite, aiBlack } = parseArgs();
+    let chess = null;
+    let book = null;
+
+    if (bookPath) {
+        if (!fs || !fs.existsSync(bookPath)) {
+            console.error(`Error: book file not found: ${bookPath}`);
+            process.exit(1);
+        }
+        book = fs.readFileSync(bookPath);
+        console.log('book loaded!');
+    }
+    
+    // leave fen states and table null
+    chess = new Chess(null, null, book, null);
+
+    if (aiWhite) {
         // if AI is white, board should be from blacks perspective
         chess.board.flipPerspective();
         let move = chess.suggestMove(3);
@@ -44,7 +87,7 @@ function playChess() {
             console.log(result);
 
             if (result === Chess.Status.MOVEOK || result === Chess.Status.CHECK) {
-                if (process.argv.includes('--ai-black') || process.argv.includes('--ai-white')) {
+                if (aiBlack || aiWhite) {
                     let move = chess.suggestMove(3);
 
                     chess.move(move);
