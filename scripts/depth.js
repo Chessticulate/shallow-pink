@@ -1,29 +1,30 @@
+'use strict';
+
+const { performance } = require('node:perf_hooks');
 const Chess = require('../lib/chess');
-const { data, miniMax } = require('../lib/ai');
+const AI = require('../lib/ai');
 
-let depth;
-if (!process.argv[2]) {
-    depth = 3;
-}
-else depth = process.argv[2];
-
+const depth = parseInt(process.argv[2] || '3', 10);
 console.log('depth =', depth);
 
-let chess = new Chess();
+const game = new Chess();
 
-currentMoves = chess.legalMoves();
-console.log("best move: ", miniMax(chess, depth));
-console.log("nodes visited: ", data.nodeCount);
-console.log("nodes pruned: ", data.prunedNodes);
-console.log("nodes memoized: ", data.tptNodes);
+const t0 = performance.now();
+const best = AI.miniMaxBB ? AI.miniMaxBB(game, depth) : AI.miniMax(game, depth);
+const t1 = performance.now();
 
-/** NOTES
- *  
- * prunedNodes variable supplies the number of times a branch was cut early, not the actual number of nodes on that branch
- * to achieve the accurate number of nodes pruned would be the number of all possible variations at depth n - nodes visited at depth n
- * 
- * 
- * SAMPLE GAMES
- * 
- * '4b3/8/2BK1k1p/6pP/2P2p2/1p4b1/2p2qP1/4r2r w - - 0 1'
- */
+console.log('AI move:', best);
+console.log('best move: ', best);
+
+const stats = AI.data || AI.dataBB || {};
+const visited = stats.nodeCount ?? 0;
+const pruned  = stats.prunedNodes ?? 0;
+const memo    = stats.tptNodes ?? 0;
+
+const elapsed = (t1 - t0) / 1000;
+console.log('nodes visited: ', visited);
+console.log('nodes pruned: ', pruned);
+console.log('nodes memoized: ', memo);
+console.log(`elapsed: ${elapsed.toFixed(9)}s`);
+console.log('NPS:', visited ? visited / elapsed : 0);
+
