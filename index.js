@@ -61,7 +61,7 @@ function playChess() {
     if (aiWhite) {
         // if AI is white, board should be from blacks perspective
         chess.board.flipPerspective();
-        let move = chess.suggestMove(3);
+        let move = chess.suggestMove(5);
         let result = chess.move(move);
         console.log(`result: ${result}`);
     }
@@ -88,7 +88,7 @@ function playChess() {
 
             if (result === Chess.Status.MOVEOK || result === Chess.Status.CHECK) {
                 if (aiBlack || aiWhite) {
-                    let move = chess.suggestMove(3);
+                    let move = chess.suggestMove(5);
 
                     chess.move(move);
                 }

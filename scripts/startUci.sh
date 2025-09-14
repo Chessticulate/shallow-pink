@@ -1,6 +1,2 @@
-#!/bin/bash
-
-DIR="$(cd "$(dirname "$0")/.." && pwd)"
-echo "Engine root: $DIR"
+DIR="$(cd "$(dirname "$0")/.." && pwd)" 
 node "$DIR/lib/uci.js"
-
