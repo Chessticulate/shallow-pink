@@ -4,7 +4,7 @@ const Chess = require('../lib/chess');
 const Status = require('../lib/status');
 
 test('zobrist hash', () => {
-    const chess = new Chess();
+    let chess = new Chess();
 
     // Known Polyglot key for the initial position:
     expect(chess.board.hash).toBe(5060803636482931868n); // 0x463b96181691fc9c
@@ -64,6 +64,9 @@ test('zobrist hash', () => {
         }
 
         expect(chess.board.hash).toBe(expectedHashes[i]);
+        // console.log(chess.toFEN());
     }
+    // verify that creating a new chess obj from the end fen str results in correct hash
+    chess = new Chess("2kr1b1r/pppq2pp/5n2/8/6Q1/7P/P2P1PP1/qNB2RK1 w - - 2 13");
+    expect(chess.board.hash).toBe(16472294009026691487n);
 });
-
