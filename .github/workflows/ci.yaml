@@ -81,8 +81,8 @@ jobs:
               run: |
                   cd lichess-bot
                   echo $PWD
-              # NOT RUNNING BOT UNTIL AI IMPROVEMENTS
-              #    python3 lichess-bot.py
+                  # COMMENT OUT LINE BELOW TO IGNORE LICHESS GAMES
+                  python3 lichess-bot.py
 
     publish:
         runs-on: ubuntu-latest
