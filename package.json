@@ -19,7 +19,7 @@
     "url": "https://github.com/Chessticulate/shallow-pink/issues"
   },
   "bin": {
-    "shallowpink": "./index.js"
+    "shallowpink": "index.js"
   },
   "homepage": "https://github.com/Chessticulate/shallow-pink#readme",
   "devDependencies": {
